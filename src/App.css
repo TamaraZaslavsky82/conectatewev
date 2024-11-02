@@ -1,38 +1,37 @@
 .App {
-  text-align: center;
+  /* Elimina la imagen de fondo aquí si no quieres que se aplique a todo el contenedor */
+  /* background-image: url('./montaña.jpg'); */
+  color: rgb(3, 3, 3); /* Cambia el color del texto si es necesario para que sea legible */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.banner {
+  background-image: url('./montaña.jpg'); /* Ruta de la imagen */
+  background-size: cover; /* O 'contain' si prefieres */
+  background-position: center; /* Centrar la imagen */
+  height: 300px; /* Altura del banner */
+  display: flex; /* Para centrar el contenido dentro del banner */
+  align-items: center; /* Centrar verticalmente */
+  justify-content: center; /* Centrar horizontalmente */
+  color: white; /* Color del texto en el banner */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
+/* App.css */
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.card-grid {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
-.App-link {
-  color: #61dafb;
+.card {
+  width: calc(33% - 20px);
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  padding: 10px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.card .description {
+  height: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
