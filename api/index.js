@@ -62,7 +62,7 @@ app.get("/profile", requiresAuth(), (req, res) => {
 //Server Listen
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-  //dbConnect();
+  dbConnect();
 });
 
 
