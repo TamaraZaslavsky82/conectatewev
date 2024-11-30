@@ -1,9 +1,9 @@
 const express = require("express");
-const dbConnect = require("./db/db");
+const dbConnect = require("./config/db");
 const cors = require("cors");
 require("dotenv").config();
 const PORT = process.env.PORT || 5001; // Port Server
-//const mainRouter = require("./src/routes/index.js");
+const mainRouter = require("./src/routes/index.js");
 const morgan = require("morgan");
 // const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const app = express();
@@ -35,35 +35,10 @@ app.use((req, res, next) => {
   next();
 });
 
-
-//app.use(mainRouter);
-
-//Auth0
-/*app.use(auth(config));
-app.get("/", (req, res) => {
-  res.send(req.oidc.isAuthenticated() ? "Logged in" : "Logged out");
-});
-app.get("/login", (req, res) => {
-  console.log(req.oidc);
-  res.oidc.login({
-    returnTo: "/dashboard",
-  });
-});
-app.get("/dashboard", requiresAuth, (req, res) => {
-  console.log("here");
-  res.send(JSON.stringify(req.oidc.user));
-});
-app.get("/profile", requiresAuth(), (req, res) => {
-  res.send(JSON.stringify(req.oidc.user));
-});*/
-
-
+app.use(mainRouter);
 
 //Server Listen
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   dbConnect();
 });
-
-
-
