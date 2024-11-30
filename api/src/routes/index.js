@@ -1,17 +1,14 @@
 const { Router } = require("express");
-
-
-mainRouter.use("/products", ProductRouter);
-mainRouter.use("/users", UsersRouter); // ver este Handler, se repite en la ruta /user  !!
-mainRouter.use("/admin", AdminRouter);
-mainRouter.use("/clientAdmin", ClientAdminRouter);
-mainRouter.use("/category", CategoryRoutes);
-mainRouter.use("/reviews", ReviewRouter);
-mainRouter.use("/orders", OrderRouter);
-mainRouter.use("/webhook", WebhookRouter);
-
-
+const CategoryRoutes = require("./CategoryRoutes");
+const CompanyRoutes = require("./CompanyRoutes");
+const EventRoutes = require("./EventRoutes");
+const AuthRoutes = require("./AuthRoutes");
+const UserRoutes = require("./UserRoutes"); // Se añadió la ruta de User
 const mainRouter = Router();
 
-
+mainRouter.use("/category", CategoryRoutes);
+mainRouter.use("/event", EventRoutes);
+mainRouter.use("/company", CompanyRoutes);
+mainRouter.use("/auth", AuthRoutes);
+mainRouter.use("/user", UserRoutes); // Ruta de usuario
 module.exports = mainRouter;
