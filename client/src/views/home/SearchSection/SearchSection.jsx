@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import Searchbar from "../../../components/Searchbar/Searchbar";
 
 const SearchSection = () => {
   return (
-    <div>SearchSection</div>
-  )
-}
+    <section className="w-full h-screen">
+      SearchSection
+    </section>
+  );
+};
 
 export default SearchSection

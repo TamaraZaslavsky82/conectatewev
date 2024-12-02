@@ -2,7 +2,9 @@ import React from 'react'
 
 const DestacadosSection = () => {
   return (
-    <div>DestacadosSection</div>
+    <section className="w-screen h-screen">
+    Destacados section
+  </section>
   )
 }
 

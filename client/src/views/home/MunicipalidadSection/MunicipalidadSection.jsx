@@ -2,7 +2,9 @@ import React from 'react'
 
 const MunicipalidadSection = () => {
   return (
-    <div>MunicipalidadSection</div>
+    <section className="w-screen h-screen">
+    Muni
+  </section>
   )
 }
 
