@@ -6,7 +6,7 @@ function App() {
   const location = useLocation();
   return (
     <>
-      <div className="w-full h-full text-6xl flex justify-center items-center ">
+      <div className="w-screen max-w-full overflow-hidden pt-20">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/dashboard" element={<DashboardAdmin />} />
