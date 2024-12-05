@@ -1,0 +1,12 @@
+.botones-fijos-container {
+    display: flex;
+    justify-content: center; /* Centra los botones horizontalmente */
+    align-items: center; /* Centra los botones verticalmente */
+    position: fixed;
+    bottom: 8px;
+    left: 0;
+    right: 0; /* Ocupa todo el ancho de la pantalla */
+    background-color: rgba(203, 52, 198, 0.8); /* Fondo semitransparente */
+    padding: 10px;
+    border-radius: 5px;
+  }
