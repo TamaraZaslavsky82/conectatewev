@@ -1,6 +1,7 @@
 import React from "react";
 import image from '../../../assets/banner.webp'
 import { FaUtensils, FaHotel, FaMapMarkedAlt } from "react-icons/fa";
+import Searchbar from "../../../components/Searchbar/Searchbar";
 
 const SearchSection = () => {
   return (
@@ -17,11 +18,7 @@ const SearchSection = () => {
         ¡Descubri San Francisco del Monte de Oro!
       </h1>
       {/* Campo de búsqueda */}
-      <input
-        type="text"
-        placeholder="Buscar..."
-        className="w-full max-w-md px-4 py-2 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
+      <Searchbar/>
       {/* Íconos */}
       <div className="flex justify-center space-x-6 mt-6">
         {/* Ícono de comida */}
