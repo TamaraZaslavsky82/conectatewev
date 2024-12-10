@@ -16,6 +16,7 @@ const createNewCategory = async (name, description, image) => {
       name,
       description,
       image: imageUrl,
+      
     });
 
     const savedCategory = await newCategory.save();
