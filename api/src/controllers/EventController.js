@@ -1,76 +1,98 @@
-const cloudinary = require("../../config/cloudinary");
+// EventControllers.js
 const Event = require("../models/Event");
+const cloudinary = require("cloudinary").v2;
+const fs = require("fs/promises");
 
-// Crear un nuevo evento con imágenes
-const createNewEvent = async (data, images) => {
+// Create a new event
+const createEvent = async (data, files) => {
   try {
-    let uploadedImages = [];
-    if (images) {
-      const uploadPromises = images.map((image) =>
-        cloudinary.uploader.upload(image, { folder: "events" })
-      );
-      const results = await Promise.all(uploadPromises);
-      uploadedImages = results.map((result) => result.secure_url);
+    const imageUrls = [];
+
+    if (files && files.length > 0) {
+      for (const file of files) {
+        const result = await cloudinary.uploader.upload(file.path, {
+          folder: "events",
+        });
+        imageUrls.push(result.secure_url);
+        await fs.unlink(file.path); // Remove file after upload
+      }
     }
 
-    const newEvent = new Event({ ...data, image: uploadedImages });
-    const savedEvent = await newEvent.save();
-    return savedEvent;
+    data.images = imageUrls;
+    const newEvent = new Event(data);
+    return await newEvent.save();
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error(`Error creating event: ${error.message}`);
   }
 };
 
-// Obtener todos los eventos
+// Get all events
 const getAllEvents = async () => {
   try {
-    const events = await Event.find();
-    return events;
+    return await Event.find();
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error(`Error fetching events: ${error.message}`);
   }
 };
 
-// Actualizar evento con nuevas imágenes
-const updateEvent = async (eventId, data, images) => {
+// Get event by ID
+const getEventById = async (id) => {
   try {
-    let updatedFields = { ...data };
-
-    if (images) {
-      const uploadPromises = images.map((image) =>
-        cloudinary.uploader.upload(image, { folder: "events" })
-      );
-      const results = await Promise.all(uploadPromises);
-      updatedFields.image = results.map((result) => result.secure_url);
+    const event = await Event.findById(id);
+    if (!event) {
+      throw new Error("Event not found");
     }
+    return event;
+  } catch (error) {
+    throw new Error(`Error fetching event: ${error.message}`);
+  }
+};
 
-    const updatedEvent = await Event.findByIdAndUpdate(eventId, updatedFields, { new: true });
-
-    if (!updatedEvent) {
+// Update event by ID
+const updateEvent = async (id, data, files) => {
+  try {
+    const event = await Event.findById(id);
+    if (!event) {
       throw new Error("Event not found");
     }
 
-    return updatedEvent;
+    if (files && files.length > 0) {
+      const imageUrls = [];
+      for (const file of files) {
+        const result = await cloudinary.uploader.upload(file.path, {
+          folder: "events",
+        });
+        imageUrls.push(result.secure_url);
+        await fs.unlink(file.path); // Remove file after upload
+      }
+      data.images = imageUrls;
+    }
+
+    return await Event.findByIdAndUpdate(id, data, { new: true });
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error(`Error updating event: ${error.message}`);
   }
 };
 
-// Eliminar evento
-const deleteEvent = async (eventId) => {
+// Delete event by ID
+const deleteEvent = async (id) => {
   try {
-    const deletedEvent = await Event.findByIdAndDelete(eventId);
-    if (!deletedEvent) throw new Error("Event not found");
+    const event = await Event.findById(id);
+    if (!event) {
+      throw new Error("Event not found");
+    }
 
-    return deletedEvent;
+    await Event.findByIdAndDelete(id);
+    return { message: "Event deleted successfully" };
   } catch (error) {
-    throw new Error(error.message);
+    throw new Error(`Error deleting event: ${error.message}`);
   }
 };
 
 module.exports = {
-  createNewEvent,
+  createEvent,
   getAllEvents,
+  getEventById,
   updateEvent,
   deleteEvent,
 };
