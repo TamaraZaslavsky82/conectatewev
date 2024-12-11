@@ -47,7 +47,10 @@ function CategoryView() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* Generar tres cards por fila */}
                 {Array.from({ length: 9 }).map((_, index) => (
-                  <Card key={index} title={`Card ${index + 1}`} />
+                  <Card key={index} 
+                  title={`Card ${index + 1}`} 
+                  buttonText= {`Ver Mas`}
+                  />
                 ))}
               </div>
             )}

@@ -64,8 +64,13 @@ const Navbar = () => {
             onClick={() => handleNavigate("/categorias")}
           />
           <NavButton icon={<FaMapMarkerAlt />} label="Mapa" />
-          <NavButton icon={<FaCalendarAlt />} label="Eventos" />
-          <NavButton icon={<FaShoppingCart />} label="Ofertas" />
+          <NavButton icon={<FaCalendarAlt />} 
+          label="Eventos" 
+          onClick={() => handleNavigate("/eventos")} 
+          />
+          <NavButton icon={<FaShoppingCart />} 
+          label="Ofertas" 
+          onClick={() => handleNavigate("/ofertas")} />
           <NavButton icon={<FaUserPlus />} label="Sumate" />
         </div>
 
