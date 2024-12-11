@@ -71,7 +71,8 @@ const Navbar = () => {
           <NavButton icon={<FaShoppingCart />} 
           label="Ofertas" 
           onClick={() => handleNavigate("/ofertas")} />
-          <NavButton icon={<FaUserPlus />} label="Sumate" />
+          <NavButton icon={<FaUserPlus />} label="Sumate" 
+          onClick={() => handleNavigate("/sumate")}/>
         </div>
 
         {/* Redes Sociales */}

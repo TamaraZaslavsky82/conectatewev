@@ -24,7 +24,7 @@ const Home = () => {
       {/* Information Section */}
       <InformationSection />
       {/* footer Section */}
-      <Footer />
+      
     </div>
   );
 };
