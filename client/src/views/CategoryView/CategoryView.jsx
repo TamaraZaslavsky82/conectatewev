@@ -1,54 +1,56 @@
-import React from 'react';
-import Sidebar from '../../components/SideBar/SideBar';
-import SearchSection from '../home/SearchSection/SearchSection';
-import Card from '../../components/Cards/Cards'
+import React, { useState } from "react";
+import Sidebar from "../../components/SideBar/SideBar";
+import SearchSection from "../home/SearchSection/SearchSection";
+import Card from "../../components/Cards/Cards"; // Reutilizando el componente Card
+import Map from "../../components/Map/Map"; // Componente del mapa
 
 function CategoryView() {
-  // Datos para las tarjetas
-  const cards = Array(9).fill({
-    title: "Card Title",
-    description: "This is a sample description for the card.",
-    image: "https://via.placeholder.com/150",
-    buttonText: 'Mas info'
-  });
+  const [showMap, setShowMap] = useState(false);
+
+  const toggleView = () => {
+    setShowMap((prev) => !prev);
+  };
 
   return (
-    <div className="flex flex-col">
-      {/* Hero - SearchSection */}
-      <div className="w-full">
+    <div className="w-full">
+      {/* Hero Section */}
+      <div className="w-full bg-gray-100 p-6">
         <SearchSection />
       </div>
 
-      {/* Contenido principal */}
-      <div className="flex flex-col md:flex-row mt-4 p-4">
-        {/* Categorías (Sidebar) */}
-        <div className="w-full md:w-1/4">
+      {/* Contenido Principal */}
+      <div className="flex flex-row w-full">
+        {/* Sidebar */}
+        <div className="w-1/4 bg-blue-950 text-white h-screen">
           <Sidebar />
         </div>
 
-        {/* Contenido derecho */}
-        <div className="w-full md:w-3/4 flex flex-col">
-          {/* Botones */}
+        {/* Main Content */}
+        <div className="w-3/4 p-4 flex flex-col">
+          {/* Botón de alternar vista */}
           <div className="flex justify-between mb-4">
-            <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
-              Buscar en el mapa
+            <button
+              onClick={toggleView}
+              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+            >
+              {showMap ? "Volver a Cards" : "Buscar en el mapa"}
             </button>
-            <button className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded">
-              Ordenar por
-            </button>
+            <button
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Ordenar por</button>
           </div>
 
-          {/* Grid de Tarjetas */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {cards.map((card, index) => (
-              <Card
-                key={index}
-                title={card.title}
-                description={card.description}
-                image={card.image}
-                buttonText={card.buttonText}
-              />
-            ))}
+          {/* Mostrar Cards o Mapa */}
+          <div className="flex-1">
+            {showMap ? (
+              <Map />
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Generar tres cards por fila */}
+                {Array.from({ length: 9 }).map((_, index) => (
+                  <Card key={index} title={`Card ${index + 1}`} />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
