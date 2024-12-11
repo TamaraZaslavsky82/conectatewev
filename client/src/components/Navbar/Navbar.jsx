@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   FaHome,
   FaTags,
@@ -6,24 +7,62 @@ import {
   FaCalendarAlt,
   FaShoppingCart,
   FaUserPlus,
+  FaFacebook,
+  FaInstagram,
 } from "react-icons/fa";
-import { FaFacebook, FaInstagram } from "react-icons/fa";
 import { WiDaySunny } from "react-icons/wi";
 
 const Navbar = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Detectar desplazamiento
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Funciones de navegación
+  const handleNavigate = (route) => {
+    if (location.pathname !== route) {
+      navigate(route);
+    }
+  };
+
   return (
-    <nav className="font-inter text-primary fixed w-screen top-0 z-50 shadow-md">
+    <nav
+      className={`font-inter text-primary fixed w-screen top-0 z-50 shadow-md transition-all duration-300 ${
+        isScrolled ? "bg-blue-950 text-white" : "bg-transparent text-primary"
+      }`}
+    >
       <div className="container mx-auto flex justify-between items-center space-x-1 py-4 px-1">
         {/* Clima */}
         <div className="flex flex-col items-center space-x-2">
           <WiDaySunny size={28} className="text-yellow-400" />
-          <span className="text-sm">25°C - San Fransisco</span>
+          <span className="text-sm">25°C - San Francisco</span>
         </div>
 
         {/* Botones principales */}
-        <div className="flex space-x-4 ">
-          <NavButton icon={<FaHome />} label="Inicio" />
-          <NavButton icon={<FaTags />} label="Categorias" />
+        <div className="flex space-x-4">
+          <NavButton
+            icon={<FaHome />}
+            label="Inicio"
+            onClick={() => handleNavigate("/")}
+          />
+          <NavButton
+            icon={<FaTags />}
+            label="Categorías"
+            onClick={() => handleNavigate("/categorias")}
+          />
           <NavButton icon={<FaMapMarkerAlt />} label="Mapa" />
           <NavButton icon={<FaCalendarAlt />} label="Eventos" />
           <NavButton icon={<FaShoppingCart />} label="Ofertas" />
@@ -40,8 +79,11 @@ const Navbar = () => {
   );
 };
 
-const NavButton = ({ icon, label }) => (
-  <button className="flex flex-col items-center hover:text-yellow-400">
+const NavButton = ({ icon, label, onClick }) => (
+  <button
+    onClick={onClick}
+    className="flex flex-col items-center hover:text-yellow-400"
+  >
     {icon}
     <span className="text-xs mt-1 hidden tablet:block">{label}</span>
   </button>
