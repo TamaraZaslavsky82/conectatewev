@@ -7,6 +7,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import PromotionView from "./views/PromotionsView/PromotionsView.jsx";
 import EventView from "./views/EventsView/EventView.jsx";
 import SumateApp from "./views/SumateApp/SumateApp.jsx";
+import Card from "./components/Card/Card.jsx";
 
 function App() {
   const location = useLocation();
@@ -25,6 +26,7 @@ function App() {
           <Route path="/ofertas" element={<PromotionView />} />
           <Route path="/eventos" element={<EventView />} />
           <Route path="/sumate" element={<SumateApp />} />
+          <Route path="/details" element={<Card />} />
         </Routes>
       </div>
       <Footer /> {/* Incluye el Footer aquí */}

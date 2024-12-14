@@ -1,5 +1,5 @@
 import React from "react";
-import bannerGif from '../../../assets/impuestos.gif'
+import bannerGif from '../../../assets/impuestos.gif';
 
 const BannerSection = () => {
   return (
@@ -7,7 +7,7 @@ const BannerSection = () => {
       <img
         src={bannerGif}
         alt="Banner"
-        className="w-[970px] h-[250px] object-cover"
+        className="w-full h-auto max-w-[970px] sm:h-[200px] md:h-[250px] lg:h-[280px] object-cover"
       />
     </div>
   );

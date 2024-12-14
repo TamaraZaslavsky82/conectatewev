@@ -10,31 +10,69 @@ import {
   FaFacebook,
   FaInstagram,
 } from "react-icons/fa";
-import { WiDaySunny } from "react-icons/wi";
+import { WiDaySunny, WiCloud, WiRain, WiSnow, WiFog } from "react-icons/wi";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [weatherData, setWeatherData] = useState(null); // Estado para el clima
   const navigate = useNavigate();
   const location = useLocation();
 
   // Detectar desplazamiento
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 0) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 0);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Obtener datos del clima
+  useEffect(() => {
+    const fetchWeather = async () => {
+      try {
+        const response = await fetch(
+          `http://api.openweathermap.org/data/2.5/weather?q=San Francisco del Monte de Oro,ar&appid=92cfc5f22160d5a5d90297a265b279de&units=metric`
+        );
+        const data = await response.json();
+        setWeatherData(data);
+        console.log("Weather data: ", data);
+      } catch (error) {
+        console.error("Error fetching weather data: ", error);
+      }
+    };
+
+    fetchWeather();
+  }, []);
+
   // Funciones de navegación
   const handleNavigate = (route) => {
     if (location.pathname !== route) {
       navigate(route);
+    }
+  };
+
+  // Seleccionar ícono según el clima
+  const getWeatherIcon = () => {
+    if (!weatherData) return <WiDaySunny size={28} className="text-yellow-400" />; // Ícono por defecto (cargando o sin datos)
+
+    const weatherCondition = weatherData.weather[0].main;
+
+    switch (weatherCondition) {
+      case "Clear":
+        return <WiDaySunny size={28} className="text-yellow-400" />;
+      case "Clouds":
+        return <WiCloud size={28} className="text-gray-400" />;
+      case "Rain":
+        return <WiRain size={28} className="text-blue-400" />;
+      case "Snow":
+        return <WiSnow size={28} className="text-white" />;
+      case "Fog":
+      case "Mist":
+        return <WiFog size={28} className="text-gray-300" />;
+      default:
+        return <WiDaySunny size={28} className="text-yellow-400" />;
     }
   };
 
@@ -46,9 +84,15 @@ const Navbar = () => {
     >
       <div className="container mx-auto flex justify-between items-center space-x-1 py-4 px-1">
         {/* Clima */}
-        <div className="flex flex-col items-center space-x-2">
-          <WiDaySunny size={28} className="text-yellow-400" />
-          <span className="text-sm">25°C - San Francisco</span>
+        <div className="flex items-center space-x-2">
+          {getWeatherIcon()}
+          {weatherData ? (
+            <span className="text-sm">
+              {Math.round(weatherData.main.temp)}°C - {weatherData.name}
+            </span>
+          ) : (
+            <span className="text-sm">Cargando...</span>
+          )}
         </div>
 
         {/* Botones principales */}
@@ -64,15 +108,21 @@ const Navbar = () => {
             onClick={() => handleNavigate("/categorias")}
           />
           <NavButton icon={<FaMapMarkerAlt />} label="Mapa" />
-          <NavButton icon={<FaCalendarAlt />} 
-          label="Eventos" 
-          onClick={() => handleNavigate("/eventos")} 
+          <NavButton
+            icon={<FaCalendarAlt />}
+            label="Eventos"
+            onClick={() => handleNavigate("/eventos")}
           />
-          <NavButton icon={<FaShoppingCart />} 
-          label="Ofertas" 
-          onClick={() => handleNavigate("/ofertas")} />
-          <NavButton icon={<FaUserPlus />} label="Sumate" 
-          onClick={() => handleNavigate("/sumate")}/>
+          <NavButton
+            icon={<FaShoppingCart />}
+            label="Ofertas"
+            onClick={() => handleNavigate("/ofertas")}
+          />
+          <NavButton
+            icon={<FaUserPlus />}
+            label="Sumate"
+            onClick={() => handleNavigate("/sumate")}
+          />
         </div>
 
         {/* Redes Sociales */}

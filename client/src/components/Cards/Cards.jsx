@@ -1,6 +1,7 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
-const Card = ({ image, title, description, buttonText }) => {
+const Cards = ({ image, title, description, buttonText }) => {
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col transform transition-transform duration-300 hover:scale-105">
       {/* Imagen */}
@@ -11,12 +12,14 @@ const Card = ({ image, title, description, buttonText }) => {
           <h3 className="text-lg font-bold mb-2">{title}</h3>
           <p className="text-gray-600 text-sm mb-4">{description}</p>
         </div>
-        <button className="bg-yellow-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          {buttonText}
-        </button>
+        <Link to="/details">
+          <button className="bg-yellow-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            {buttonText}
+          </button>
+        </Link>
       </div>
     </div>
   );
 };
 
-export default Card;
+export default Cards;
