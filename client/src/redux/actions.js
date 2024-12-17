@@ -1108,7 +1108,7 @@ export const DeletePuntosWifi= (id) => {
         try {
             var f = new FormData();
             f.append("METHOD", "DELETE");
-            var response = await axios.post(puntosWifiURL, f, { params: { id: id } });
+            var response = await axios.post(puntosWifiURLL, f, { params: { id: id } });
             return dispatch({
                 type: DELETE_PUNTOS_WIFI,
                 payload: response.id,

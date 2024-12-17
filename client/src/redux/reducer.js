@@ -1,6 +1,6 @@
 const initialState = {
-    cities: [],
-    categiresDetail: [],
+    categories: [],
+    categoriesDetail: [],
     cities: [],
     citiesDetail: [],
     events: [],
@@ -29,13 +29,13 @@ const rootReducer = (state = initialState, action) => {
         case "GET_CATEGORIES":
             return {
                 ...state,
-                ccategorie: action.payload,
+                categories: action.payload,
             };
 
         case "GET_ID_CATEGORY":
             return {
                 ...state,
-                categorieDetail: action.payload,
+                categoriesDetail: action.payload,
             };
 
         case "POST_CATEGORY":
@@ -46,7 +46,7 @@ const rootReducer = (state = initialState, action) => {
         case "UPDATE_CATEGORY":
             return {
                 ...state,
-                categorie: state.categorie.map((item) => {
+                categories: state.categories.map((item) => {
                     return item.id === action.payload.id ? action.payload : item;
                 }),
             };
@@ -54,7 +54,7 @@ const rootReducer = (state = initialState, action) => {
         case "DELETE_CATEGORY":
             return {
                 ...state,
-                categorie: state.categorie.filter((item) => item.id !== action.payload),
+                categories: state.categories.filter((item) => item.id !== action.payload),
             };
         case "GET_CITIES":
             return {
