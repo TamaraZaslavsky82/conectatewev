@@ -30,7 +30,7 @@ const MunicipalidadSection = () => {
           <p className="text-base md:text-xl mb-4 md:mb-6">
             Podés acceder de una forma rápida a la website de la Municipalidad
           </p>
-          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md">
+          <button className="bg-yellow-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-md">
             Ingresa
           </button>
         </div>

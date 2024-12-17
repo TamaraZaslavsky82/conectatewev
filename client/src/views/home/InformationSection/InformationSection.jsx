@@ -28,7 +28,7 @@ const InformacionSection = () => {
             <FaWifi className="text-4xl text-blue-500 mb-4" />
             <h3 className="text-lg font-bold mb-2">Conexión WiFi</h3>
             <p className="text-sm text-center">
-              Disfruta de WiFi gratuito en todas nuestras instalaciones.
+              Disfruta de WiFi gratuito en toda la localidad.
             </p>
           </div>
 

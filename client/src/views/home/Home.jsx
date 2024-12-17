@@ -5,6 +5,7 @@ import MunicipalidadSection from "./MunicipalidadSection/MunicipalidadSection";
 import DestacadosSection from "./DestacadosSection/DestacadosSection";
 import InformationSection from "./InformationSection/InformationSection";
 import Footer from "../../components/Footer/Footer";
+import BannerSection from "./BannerSection/BannerSection";
 
 const Home = () => {
   return (
@@ -14,7 +15,7 @@ const Home = () => {
 
       {/* Search Section */}
       <SearchSection />
-
+<BannerSection/>
       {/* Municipalidad Section */}
       <MunicipalidadSection />
 
@@ -23,7 +24,7 @@ const Home = () => {
       {/* Information Section */}
       <InformationSection />
       {/* footer Section */}
-      <Footer />
+      
     </div>
   );
 };
