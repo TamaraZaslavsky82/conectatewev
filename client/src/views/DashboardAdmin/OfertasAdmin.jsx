@@ -142,7 +142,7 @@ function OffersAdmin() {
             Hora de inicio:
           </label>
           <input
-            type="time"
+            type="datetime-local"
             id="start_time"
             name="start_time"
             className="w-full border p-2 rounded"
@@ -157,7 +157,7 @@ function OffersAdmin() {
             Hora de fin:
           </label>
           <input
-            type="time"
+            type="datetime-local"
             id="end_time"
             name="end_time"
             className="w-full border p-2 rounded"

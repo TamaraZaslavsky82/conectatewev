@@ -10,11 +10,9 @@ function EventosAdmin() {
   const places = useSelector(selectSorterPlaces);
   const [imageUrl, setImageUrl] = useState(null);
 
-
   useEffect(() => {
     dispatch(GetPlaces());
   }, [dispatch]);
-
 
   const handleInputChange = async (e) => {
     const { name, value, files } = e.target;
@@ -30,9 +28,6 @@ function EventosAdmin() {
       } catch (error) {
         console.error("Error uploading image:", error);
       }
-
-
-
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -41,20 +36,15 @@ function EventosAdmin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const formDataToSubmit = { ...formData, image_url: imageUrl }
+      const formDataToSubmit = { ...formData, image_url: imageUrl };
 
       await dispatch(PostEvents(formDataToSubmit));
       await dispatch(GetEvents());
       setFormData(eventFormData);
-
-
     } catch (error) {
-      console.error("Error al registrar el event: ", error);
+      console.error("Error al registrar el evento: ", error);
     }
   };
-
-
-
 
   console.log(formData);
 
@@ -134,7 +124,7 @@ function EventosAdmin() {
             {`Puedes subir hasta ${status === "Premium" ? 5 : 1} imagen(es).`}
           </p>
         </div>
-        {imageUrl && (<img src={imageUrl} />)}
+        {imageUrl && (<img src={imageUrl} alt="Vista previa" />)}
 
         {/* Hora de inicio */}
         <div>
@@ -142,11 +132,11 @@ function EventosAdmin() {
             Hora de inicio:
           </label>
           <input
-            type="time"
+            type="datetime-local"
             id="start_time"
             name="start_time"
             className="w-full border p-2 rounded"
-            value={formData.start_time}
+            value={formData.start_time ? formData.start_time.slice(0, 16) : ''}
             onChange={handleInputChange}
           />
         </div>
@@ -157,11 +147,11 @@ function EventosAdmin() {
             Hora de fin:
           </label>
           <input
-            type="time"
+            type="datetime-local"
             id="end_time"
             name="end_time"
             className="w-full border p-2 rounded"
-            value={formData.end_time}
+            value={formData.end_time ? formData.end_time.slice(0, 16) : ''}
             onChange={handleInputChange}
           />
         </div>
@@ -175,7 +165,6 @@ function EventosAdmin() {
         </button>
       </form>
     </div>
-
   );
 }
 
