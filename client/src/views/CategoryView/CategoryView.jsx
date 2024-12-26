@@ -1,27 +1,29 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/SideBar/SideBar";
 import SearchSection from "../home/SearchSection/SearchSection";
 import Cards from "../../components/Cards/Cards";
-import Map from "../../components/Map/Map";
-import { GetPlaces, GetCategories } from "../../redux/actions"; // Asegúrate de tener estas acciones
+import ModalFree from "../../components/ModalFree/ModalFree";
+import { GetPlaces, GetCategories } from "../../redux/actions";
+import MapView from "../../components/MapView/MapView";
 
 function CategoryView() {
   const dispatch = useDispatch();
-
-  // Obtener lugares y categorías del store
-  const places = useSelector((state) => state.places); // Asegúrate de que `places` esté definido en el reducer
-  const categories = useSelector((state) => state.categories); // Asegúrate de que `categories` esté definido en el reducer
+  const navigate = useNavigate();
+  const places = useSelector((state) => state.places);
+  const categories = useSelector((state) => state.categories);
 
   const [showMap, setShowMap] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedPlace, setSelectedPlace] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     dispatch(GetPlaces());
     dispatch(GetCategories());
   }, [dispatch]);
 
-  // Filtrar lugares por categoría seleccionada
   const filteredPlaces = selectedCategory
     ? places.filter((place) => place.category === selectedCategory)
     : places;
@@ -38,6 +40,22 @@ function CategoryView() {
     setSelectedCategory("");
   };
 
+  const handleCardClick = (place) => {
+    if (place.status_type === 0) {
+      // Redirigir a la página de detalle para lugares premium
+      navigate(`/place/${place.id}`);
+    } else if (place.status_type === 1) {
+      // Abrir el modal para lugares no premium
+      setSelectedPlace(place);
+      setIsModalOpen(true);
+    }
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedPlace(null);
+  };
+
   return (
     <div className="w-full">
       {/* Hero Section */}
@@ -45,52 +63,13 @@ function CategoryView() {
         <SearchSection />
       </div>
 
-      {/* Vista móvil */}
-      <div className="block md:hidden w-full p-4">
-        {selectedCategory ? (
-          <div>
-            <h2 className="text-xl font-bold mb-4">{selectedCategory}</h2>
-            <div className="space-y-4">
-              {filteredPlaces.map((place) => (
-                <div key={place.id} className="border-b border-gray-300 pb-2">
-                  <h3 className="text-lg font-semibold">{place.name}</h3>
-                  <p className="text-sm text-gray-600">{place.description}</p>
-                </div>
-              ))}
-            </div>
-            <button
-              onClick={handleBackToCategories}
-              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 mt-4"
-            >
-              Volver a las categorías
-            </button>
-          </div>
-        ) : (
-          <div>
-            <h2 className="text-lg font-semibold mb-4">Categorías</h2>
-            {categories.map((category) => (
-              <div
-                key={category.id}
-                className="mb-4 border-b border-gray-300 pb-2 cursor-pointer"
-                onClick={() => handleCategoryClick(category.name)}
-              >
-                {category.name}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
       {/* Vista de escritorio */}
       <div className="hidden md:flex flex-row w-full">
-        {/* Sidebar */}
         <div className="w-1/4 bg-blue-950 text-white h-screen">
           <Sidebar />
         </div>
 
-        {/* Main Content */}
         <div className="w-3/4 p-4 flex flex-col">
-          {/* Botón de alternar vista */}
           <div className="flex justify-between mb-4">
             <button
               onClick={toggleView}
@@ -98,33 +77,54 @@ function CategoryView() {
             >
               {showMap ? "Volver a Cards" : "Buscar en el mapa"}
             </button>
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-              Ordenar por
-            </button>
           </div>
 
-          {/* Mostrar Cards o Mapa */}
           <div className="flex-1">
             {showMap ? (
-              <Map />
+              <MapView />
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {filteredPlaces.map((place) => (
-                  <Cards
-                  key={place.id}
-                  image={place.image_url}
-                  title={place.title}
-                  description={place.description_place}
-                  buttonText="Ver Más"
-                  isPremium={place.status_type === 0} // Ejemplo: status_type 0 indica "premium"
-                />
-                
+                  <div
+                    key={place.id}
+                    onClick={() => handleCardClick(place)}
+                    className="cursor-pointer"
+                  >
+                    <Cards
+                      image={place.image_url}
+                      title={place.title}
+                      description={place.description_place}
+                      buttonText="Ver Más"
+                      isPremium={place.status_type === 0}
+                    />
+                  </div>
                 ))}
               </div>
             )}
           </div>
         </div>
       </div>
+
+      {/* Modal */}
+      {isModalOpen && selectedPlace && (
+        <ModalFree onClose={closeModal}>
+          <div className="p-6">
+            <h2 className="text-2xl font-bold mb-4">{selectedPlace.title}</h2>
+            <img
+              src={selectedPlace.image_url}
+              alt={selectedPlace.title}
+              className="w-full h-64 object-cover rounded-md mb-4"
+            />
+            <p>{selectedPlace.description_place}</p>
+            <button
+              onClick={closeModal}
+              className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+            >
+              Cerrar
+            </button>
+          </div>
+        </ModalFree>
+      )}
     </div>
   );
 }

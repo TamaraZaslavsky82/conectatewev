@@ -8,6 +8,7 @@ import PromotionView from "./views/PromotionsView/PromotionsView.jsx";
 import EventView from "./views/EventsView/EventView.jsx";
 import SumateApp from "./views/SumateApp/SumateApp.jsx";
 import Card from "./components/Card/Card.jsx";
+import ModalFree from "./components/ModalFree/ModalFree.jsx";
 
 
 function App() {
@@ -29,6 +30,8 @@ function App() {
   <Route path="/eventos" element={<EventView />} />
   <Route path="/sumate" element={<SumateApp />} />
   <Route path="/place/:id" element={<Card />} />
+  <Route path="/modalfree/:id" element={<ModalFree />} />
+
   
 </Routes>
 
