@@ -95,11 +95,18 @@ const Searchbar = () => {
     }
   };
 
-  // Función para manejar la selección de un lugar y abrir el modal
+  // Función para manejar la selección de un lugar y redirigir o abrir el modal
   const handleSelectPlace = (id, statusType) => {
     const selectedPlace = places.find((place) => place.id === id); // Buscar el lugar por su ID
     setSelectedPlace(selectedPlace); // Establecer el lugar seleccionado en el estado
-    setIsModalOpen(true); // Abrir el modal
+
+    if (statusType === 0) {
+      // Si status_type es 0, redirigimos al componente de la card
+      navigate(`/place/${id}`); // Redirige a la página correspondiente
+    } else if (statusType === 1) {
+      // Si status_type es 1, abrimos el modal con la información
+      setIsModalOpen(true);
+    }
     setResults([]); // Limpiar los resultados de búsqueda
   };
 

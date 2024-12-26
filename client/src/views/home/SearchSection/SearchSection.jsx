@@ -90,7 +90,7 @@ const SearchSection = () => {
       {/* Pie de foto con el autor */}
       {signatureAuthor && (
         <div className="absolute bottom-4 right-4 bg-black bg-opacity-60 text-white text-sm px-3 py-1 rounded">
-          Autor: {signatureAuthor}
+          Fotografia de: {signatureAuthor}
         </div>
       )}
     </div>

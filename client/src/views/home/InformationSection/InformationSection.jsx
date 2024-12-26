@@ -1,8 +1,20 @@
 import React from "react";
 import { FaWifi, FaTags, FaStar } from "react-icons/fa"; // Importamos los iconos
 import fondoImage from "../../../assets/fondoinformacion.png";
+import { useNavigate } from "react-router-dom"; // Importamos useNavigate
 
 const InformacionSection = () => {
+  const navigate = useNavigate(); // Inicializamos el hook useNavigate
+
+  // Funciones para redirigir a las rutas correspondientes
+  const handleOfertasClick = () => {
+    navigate("/ofertas"); // Redirige a la ruta de ofertas
+  };
+
+  const handleEventosClick = () => {
+    navigate("/eventos"); // Redirige a la ruta de eventos
+  };
+
   return (
     <div
       className="relative bg-cover bg-center py-16 px-4 md:px-8"
@@ -24,7 +36,10 @@ const InformacionSection = () => {
         {/* Contenedor para las cards */}
         <div className="flex flex-col md:flex-row md:justify-end items-center space-y-6 md:space-y-0 md:space-x-6">
           {/* Card 1 */}
-          <div className="bg-white text-black rounded-lg shadow-lg p-6 flex flex-col items-center justify-between w-full md:w-1/4 h-full min-h-[200px]">
+          <div
+            className="bg-white text-black rounded-lg shadow-lg p-6 flex flex-col items-center justify-between w-full md:w-1/4 h-full min-h-[200px] cursor-pointer"
+            onClick={handleOfertasClick} // Llama a la función para redirigir a la ruta de ofertas
+          >
             <FaWifi className="text-4xl text-blue-500 mb-4" />
             <h3 className="text-lg font-bold mb-2">Conexión WiFi</h3>
             <p className="text-sm text-center">
@@ -33,7 +48,10 @@ const InformacionSection = () => {
           </div>
 
           {/* Card 2 */}
-          <div className="bg-white text-black rounded-lg shadow-lg p-6 flex flex-col items-center justify-between w-full md:w-1/4 h-full min-h-[200px]">
+          <div
+            className="bg-white text-black rounded-lg shadow-lg p-6 flex flex-col items-center justify-between w-full md:w-1/4 h-full min-h-[200px] cursor-pointer"
+            onClick={handleOfertasClick} // Llama a la función para redirigir a la ruta de ofertas
+          >
             <FaTags className="text-4xl text-green-500 mb-4" />
             <h3 className="text-lg font-bold mb-2">Ofertas Exclusivas</h3>
             <p className="text-sm text-center">
@@ -42,7 +60,10 @@ const InformacionSection = () => {
           </div>
 
           {/* Card 3 */}
-          <div className="bg-white text-black rounded-lg shadow-lg p-6 flex flex-col items-center justify-between w-full md:w-1/4 h-full min-h-[200px]">
+          <div
+            className="bg-white text-black rounded-lg shadow-lg p-6 flex flex-col items-center justify-between w-full md:w-1/4 h-full min-h-[200px] cursor-pointer"
+            onClick={handleEventosClick} // Llama a la función para redirigir a la ruta de eventos
+          >
             <FaStar className="text-4xl text-yellow-500 mb-4" />
             <h3 className="text-lg font-bold mb-2">Eventos Especiales</h3>
             <p className="text-sm text-center">
