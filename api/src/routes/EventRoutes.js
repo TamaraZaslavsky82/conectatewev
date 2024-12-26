@@ -1,18 +1,20 @@
+// EventRoutes.js
 const { Router } = require("express");
 const {
-  getEventsHandler,
-  postEventHandler,
-  putEventHandler,
+  createEventHandler,
+  getAllEventsHandler,
+  getEventByIdHandler,
+  updateEventHandler,
   deleteEventHandler,
 } = require("../handlers/EventHandlers");
 const upload = require("../middlewares/multer");
 
-const router = Router();
+const EventRoutes = Router();
 
-// Rutas del CRUD
-router.get("/", getEventsHandler); // Obtener todos los eventos
-router.post("/", upload.array("images", 5), postEventHandler); // Crear nuevo evento (máx. 5 imágenes)
-router.put("/:eventId", upload.array("images", 5), putEventHandler); // Actualizar evento
-router.delete("/:eventId", deleteEventHandler); // Eliminar evento
+EventRoutes.post("/", upload.array("images"), createEventHandler);
+EventRoutes.get("/", getAllEventsHandler);
+EventRoutes.get("/:id", getEventByIdHandler);
+EventRoutes.put("/:id", upload.array("images"), updateEventHandler);
+EventRoutes.delete("/:id", deleteEventHandler);
 
-module.exports = router;
+module.exports = EventRoutes;

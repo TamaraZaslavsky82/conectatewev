@@ -1,113 +1,135 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { GetImageBanner, GetCities, PostImageBanner } from "../../redux/actions";
+import { selectSorterCities } from "../../redux/selectors/selectors";
+import { imageBannerFormData , uploadImageToCloudinary } from "../../components/utils";
 
 function BannersAdmin() {
-  
-  const [localidad, setLocalidad] = useState(["San Francisco"]);
-  const [newLocalidad, setNewLocalidad] = useState("");
-  
-  const [images, setImages] = useState([]);
+  const [formData, setFormData] = useState(imageBannerFormData);
+  const dispatch = useDispatch();
+  const cities = useSelector(selectSorterCities);
+  const [imageUrl, setImageUrl] = useState(null);
 
-  const handleLocalidadChange = (e) => {
-    const selectedLocalidad = e.target.value;
-    if (selectedLocalidad === "new") {
-      setNewLocalidad("");
+  useEffect(() => {
+    dispatch(GetCities());
+  }, [dispatch]);
+
+  const handleInputChange = async (e) => {
+    const { name, value, files } = e.target;
+    if (name === "image_url") {
+      const file = files[0];
+      console.log("Selected file:", file);
+      setFormData({ ...formData, image_url: file });
+
+      try {
+        const uploadedUrl = await uploadImageToCloudinary(file);
+        setImageUrl(uploadedUrl);
+        console.log("Uploaded URL:", uploadedUrl);
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
+    } else {
+      setFormData({ ...formData, [name]: value });
     }
   };
 
-  const handleAddLocalidad = () => {
-    if (newLocalidad && !localidad.includes(newLocalidad)) {
-      setLocalidad([...localidad, newLocalidad]);
-      setNewLocalidad("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Validación para asegurarse de que id_city no esté vacío
+    if (!formData.id_city) {
+      alert("Por favor, selecciona un lugar.");
+      return; // No se envía el formulario si id_city está vacío
+    }
+
+    try {
+      const formDataToSubmit = { ...formData, image_url: imageUrl };
+
+      // Enviar los datos al backend
+      await dispatch(PostImageBanner(formDataToSubmit));
+      await dispatch(GetImageBanner());
+
+      // Resetear el formulario
+      setFormData(imageBannerFormData);
+    } catch (error) {
+      console.error("Error al registrar el event: ", error);
     }
   };
 
-  const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files);
-    const maxImages = status === "Premium" ? 5 : 1;
+  console.log(formData);
 
-    if (files.length + images.length > maxImages) {
-      alert(`Los usuarios ${status} pueden subir hasta ${maxImages} imagen(es).`);
-      return;
-    }
-
-    setImages([...images, ...files]);
-  };
   return (
     <div className="p-4 border rounded shadow bg-white h-screen overflow-y-auto">
-       <h1 className="text-xl font-bold mb-4">Nuevo Banner</h1>
-      <form className="space-y-4">
+      <h1 className="text-xl font-bold mb-4">Nuevo Banner</h1>
+      <form className="space-y-4" onSubmit={handleSubmit}>
         {/* Título */}
         <div>
-          <label htmlFor="title" className="block font-semibold">Título:</label>
+          <label htmlFor="signature_author" className="block font-semibold">
+            Autor
+          </label>
           <input
             type="text"
-            id="title"
-            name="title"
+            id="signature_author"
+            name="signature_author"
             className="w-full border p-2 rounded"
+            value={formData.signature_author}
+            onChange={handleInputChange}
             placeholder="Ingrese el título"
           />
         </div>
 
-        {/* Descripción */}
+        {/* Lugar */}
         <div>
-          <label htmlFor="description" className="block font-semibold">Descripción:</label>
-          <textarea
-            id="description"
-            name="description"
-            className="w-full border p-2 rounded"
-            placeholder="Ingrese la descripción"
-            rows="4"
-          ></textarea>
-        </div>
-        <div>
-          <label htmlFor="localidad" className="block font-semibold">Localidad:</label>
+          <label htmlFor="id_city" className="block font-semibold">
+            Lugar:
+          </label>
           <select
-            id="localidad"
-            name="localidad"
+            id="id_city" // Cambié id_cities a id_city
+            name="id_city" // Cambié id_cities a id_city
             className="w-full border p-2 rounded"
-            onChange={handleLocalidadChange}
+            value={formData.id_city} // Cambié id_cities a id_city
+            onChange={handleInputChange}
           >
-            {localidad.map((localida, index) => (
-              <option key={index} value={localida}>{localida}</option>
+            <option value="" disabled>
+              {cities.length === 0 ? "Cargando lugares..." : "Seleccione un lugar"}
+            </option>
+            {cities.map((place) => (
+              <option key={place.id} value={place.id}>
+                {place.title}
+              </option>
             ))}
-            <option value="new">Agregar nueva localidad</option>
           </select>
-          {newLocalidad !== null && (
-            <div className="mt-2">
-              <input
-                type="text"
-                value={newLocalidad}
-                onChange={(e) => setNewLocalidad(e.target.value)}
-                className="w-full border p-2 rounded"
-                placeholder="Nueva localidad"
-              />
-              <button
-                type="button"
-                onClick={handleAddLocalidad}
-                className="bg-blue-500 text-white mt-2 p-2 rounded hover:bg-blue-600"
-              >
-                Agregar localidad
-              </button>
-            </div>
-          )}
         </div>
+
+        {/* Subir imagen */}
         <div>
-          <label htmlFor="image" className="block font-semibold">Subir Imagen:</label>
+          <label htmlFor="image_url" className="block font-semibold">
+            URL de la imagen:
+          </label>
           <input
             type="file"
-            id="image"
-            name="image"
+            id="image_url"
+            name="image_url"
             className="w-full border p-2 rounded"
-            accept="image/*"
-            multiple={status === "Premium"}
-            onChange={handleImageUpload}
+            placeholder="Ingrese la URL de la imagen"
+            onChange={handleInputChange}
           />
-          <p className="text-sm text-gray-600">{`Puedes subir hasta ${status === "Premium" ? 5 : 1} imagen(es).`}</p>
+          <p className="text-sm text-gray-600">
+            {`Puedes subir hasta ${status === "Premium" ? 5 : 1} imagen(es).`}
+          </p>
         </div>
-        </form>
-      
+        {imageUrl && (<img src={imageUrl} alt="Vista previa de la imagen" />)}
+
+        {/* Botón de envío */}
+        <button
+          type="submit"
+          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+        >
+          Crear Banner
+        </button>
+      </form>
     </div>
-  )
+  );
 }
 
-export default BannersAdmin
+export default BannersAdmin;

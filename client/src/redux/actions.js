@@ -64,7 +64,7 @@ const imageBannerURL = import.meta.env.VITE_API_IMAGE_BANNER_URL;
 const municipalitiesURL = import.meta.env.VITE_API_MUNICIPALITIES_URL;
 const offersURL = import.meta.env.VITE_API_OFFERS_URL;
 const pautaURL = import.meta.env.VITE_API_PAUTA_URL;
-const placesURL = import.meta.env.VITE_API_PLACES_URL;
+const placeURL = import.meta.env.VITE_API_PLACES_URL;
 const premiumPlaceImgURL = import.meta.env.VITE_API_PREMIUM_PLACE_IMG_URL;
 const puntosWifiURL = import.meta.env.VITE_API_PUNTOS_WIFI_URL;
 const socialMediaURL = import.meta.env.VITE_API_SOCIAL_MEDIA_URL;
@@ -180,12 +180,12 @@ export const GetCities = () => {
             var response = await axios.get(citiesURL);
             if (response.data !== null) {
                 return dispatch({
-                    type: GET_CATEGORIES,
+                    type: GET_CITIES,
                     payload: response.data,
                 });
             } else {
                 return dispatch({
-                    type: GET_CATEGORIES,
+                    type: GET_CITIES,
                     payload: [],
                 });
             }
@@ -321,6 +321,8 @@ export const GetEventsDetail = (id) => {
 };
 
 export const PostEvents = (atributos) => {
+    console.log(atributos);
+
     return async function (dispatch) {
         try {
             var f = new FormData();
@@ -330,7 +332,7 @@ export const PostEvents = (atributos) => {
             f.append("image_url", atributos.image_url);
             f.append("start_time", atributos.start_time);
             f.append("end_time", atributos.end_time);
-            f.append("id_place", atributos.id_place);
+            f.append("id_places", atributos.id_places);
             var response = await axios.post(eventsURL, f);
             console.log("Evento creada: ", response.data);
             return dispatch({
@@ -354,7 +356,7 @@ export const UpdateEvents = (id, atributos) => {
             f.append("image_url", atributos.image_url);
             f.append("start_time", atributos.start_time);
             f.append("end_time", atributos.end_time);
-            f.append("id_place", atributos.id_place);
+            f.append("id_places", atributos.id_places);
             var response = await axios.post(eventsURL, f, { params: { id: id } });
             return dispatch({
                 type: UPDATE_EVENT,
@@ -529,7 +531,7 @@ export const GetMunicipalitiesDetail = (id) => {
             console.log(err);
         }
     };
-};  
+};
 
 export const PostMunicipalities = (atributos) => {
     return async function (dispatch) {
@@ -634,7 +636,7 @@ export const GetOffersDetail = (id) => {
             console.log(err);
         }
     };
-};  
+};
 
 export const PostOffers = (atributos) => {
     return async function (dispatch) {
@@ -645,7 +647,7 @@ export const PostOffers = (atributos) => {
             f.append("description_offer", atributos.offer);
             f.append("start_time", atributos.start_time);
             f.append("end_time", atributos.end_time);
-            f.append("id_place", atributos.id_place);
+            f.append("id_places", atributos.id_places);
             f.append("image_url", atributos.image_url);
             var response = await axios.post(offersURL, f);
             console.log("Oferta creada: ", response.data);
@@ -669,7 +671,7 @@ export const UpdateOffers = (id, atributos) => {
             f.append("description_offer", atributos.offer);
             f.append("start_time", atributos.start_time);
             f.append("end_time", atributos.end_time);
-            f.append("id_place", atributos.id_place);
+            f.append("id_places", atributos.id_places);
             f.append("image_url", atributos.image_url);
             var response = await axios.post(offersURL, f, { params: { id: id } });
             return dispatch({
@@ -742,7 +744,7 @@ export const GetPautaDetail = (id) => {
             console.log(err);
         }
     };
-};  
+};
 
 export const PostPauta = (atributos) => {
     return async function (dispatch) {
@@ -803,8 +805,9 @@ export const DeletePauta = (id) => {
 
 export const GetPlaces = () => {
     return async function (dispatch) {
+
         try {
-            var response = await axios.get(placesURL);
+            var response = await axios.get(placeURL);
             if (response.data !== null) {
                 return dispatch({
                     type: GET_PLACES,
@@ -821,30 +824,31 @@ export const GetPlaces = () => {
             throw err;
         }
     };
+
 };
+
+
 
 export const GetPlaceDetail = (id) => {
     return async function (dispatch) {
-        try {
-            const response = await axios.get(`${placesURL}?id=${id}`);
-            if (response.data) {
-                return dispatch({
-                    type: GET_ID_PLACE,
-                    payload: response.data,
-                });
-            } else {
-                return dispatch({
-                    type: GET_ID_PLACE,
-                    payload: [],
-                });
-            }
-        } catch (err) {
-            console.log(err);
-        }
+      console.log("ID recibido en GetPlaceDetail:", id); // Depuración
+      try {
+        const response = await axios.get(`${placeURL}?id=${id}`);
+        console.log("Respuesta de la API en GetPlaceDetail:", response.data); // Depuración
+        return dispatch({
+          type: GET_ID_PLACE,
+          payload: response.data,
+        });
+      } catch (err) {
+        console.log("Error en GetPlaceDetail:", err);
+      }
     };
-};  
+  };
+  
 
-export const PostPlace= (atributos) => {
+export const PostPlace = (atributos) => {
+    console.log(atributos);
+
     return async function (dispatch) {
         try {
             var f = new FormData();
@@ -860,7 +864,7 @@ export const PostPlace= (atributos) => {
             f.append("longitude", atributos.longitude);
             f.append("tags", atributos.tags);
             f.append("id_city", atributos.id_city);
-            var response = await axios.post(placesURL, f);
+            var response = await axios.post(placeURL, f);
             console.log("Lugar creado: ", response.data);
             return dispatch({
                 type: POST_PLACE,
@@ -872,6 +876,7 @@ export const PostPlace= (atributos) => {
         }
     };
 };
+  
 
 export const UpdatePlace = (id, atributos) => {
     return async function (dispatch) {
@@ -889,7 +894,7 @@ export const UpdatePlace = (id, atributos) => {
             f.append("longitude", atributos.longitude);
             f.append("tags", atributos.tags);
             f.append("id_city", atributos.id_city);
-            var response = await axios.post(placesURL, f, { params: { id: id } });
+            var response = await axios.post(placeURL, f, { params: { id: id } });
             return dispatch({
                 type: UPDATE_PLACE,
                 payload: response.data,
@@ -901,7 +906,7 @@ export const UpdatePlace = (id, atributos) => {
     };
 };
 
-export const DeletePlace= (id) => {
+export const DeletePlace = (id) => {
     return async function (dispatch) {
         try {
             var f = new FormData();
@@ -962,13 +967,13 @@ export const GetPremiumPlaceImgDetail = (id) => {
     };
 };
 
-export const PostPremiumPlaceImg= (atributos) => {
+export const PostPremiumPlaceImg = (atributos) => {
     return async function (dispatch) {
         try {
             var f = new FormData();
             f.append("METHOD", "POST");
             f.append("image_url", atributos.image_url);
-            f.append("id_place", atributos.id_place);
+            f.append("id_places", atributos.id_places);
             var response = await axios.post(premiumPlaceImgURL, f);
             console.log("Imagen premium  creada: ", response.data);
             return dispatch({
@@ -988,7 +993,7 @@ export const UpdatePremiumPlaceImg = (id, atributos) => {
             var f = new FormData();
             f.append("METHOD", "PUT");
             f.append("image_url", atributos.image_url);
-            f.append("id_place", atributos.id_place);
+            f.append("id_places", atributos.id_places);
             var response = await axios.post(premiumPlaceImgURL, f, { params: { id: id } });
             return dispatch({
                 type: UPDATE_PREMIUM_PLACE,
@@ -1001,7 +1006,7 @@ export const UpdatePremiumPlaceImg = (id, atributos) => {
     };
 };
 
-export const DeletePremiumPlaceImg= (id) => {
+export const DeletePremiumPlaceImg = (id) => {
     return async function (dispatch) {
         try {
             var f = new FormData();
@@ -1062,7 +1067,7 @@ export const GetPuntosWifiImgDetail = (id) => {
     };
 };
 
-export const PostPuntosWifi= (atributos) => {
+export const PostPuntosWifi = (atributos) => {
     return async function (dispatch) {
         try {
             var f = new FormData();
@@ -1103,7 +1108,7 @@ export const UpdatePuntosWifi = (id, atributos) => {
     };
 };
 
-export const DeletePuntosWifi= (id) => {
+export const DeletePuntosWifi = (id) => {
     return async function (dispatch) {
         try {
             var f = new FormData();
@@ -1164,13 +1169,13 @@ export const GetSocialMediaDetail = (id) => {
     };
 };
 
-export const PostSocialMedia= (atributos) => {
+export const PostSocialMedia = (atributos) => {
     return async function (dispatch) {
         try {
             var f = new FormData();
             f.append("METHOD", "POST");
             f.append("social_media_type", atributos.social_media_type);
-            f.append("id_place", atributos.id_place);
+            f.append("id_places", atributos.id_places);
             f.append("link", atributos.link);
             var response = await axios.post(socialMediaURL, f);
             console.log("Social Media creado: ", response.data);
@@ -1191,7 +1196,7 @@ export const UpdateSocialMedia = (id, atributos) => {
             var f = new FormData();
             f.append("METHOD", "PUT");
             f.append("social_media_type", atributos.social_media_type);
-            f.append("id_place", atributos.id_place);
+            f.append("id_places", atributos.id_places);
             f.append("link", atributos.link);
             var response = await axios.post(socialMediaURL, f, { params: { id: id } });
             return dispatch({
@@ -1205,7 +1210,7 @@ export const UpdateSocialMedia = (id, atributos) => {
     };
 };
 
-export const DeleteSocialMedia= (id) => {
+export const DeleteSocialMedia = (id) => {
     return async function (dispatch) {
         try {
             var f = new FormData();

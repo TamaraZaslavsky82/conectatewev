@@ -18,10 +18,8 @@ const getCategoriesHandler = async (req, res) => {
 // Crear categoría
 const postCategoryHandler = async (req, res) => {
   try {
-    const { name, description } = req.body;
-    const image = req.file?.path; // Archivo de imagen subido con Multer
-
-    const newCategory = await createNewCategory(name, description, image);
+    const { name, description,image } = req.body;
+    const newCategory = await createNewCategory(name, description,image);
     res.status(201).json(newCategory);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -32,8 +30,7 @@ const postCategoryHandler = async (req, res) => {
 const putCategoryHandler = async (req, res) => {
   try {
     const { categoryId } = req.params;
-    const { name, description } = req.body;
-    const image = req.file?.path;
+    const { name, description,image } = req.body;
 
     const updatedCategory = await updateCategory(categoryId, name, description, image);
     res.status(200).json(updatedCategory);

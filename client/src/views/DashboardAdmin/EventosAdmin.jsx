@@ -1,113 +1,182 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { GetEvents, GetPlaces, PostEvents } from "../../redux/actions";
+import { selectSorterPlaces } from "../../redux/selectors/selectors";
+import { eventFormData, uploadImageToCloudinary } from "../../components/utils";
 
 function EventosAdmin() {
-  
-  const [localidad, setLocalidad] = useState(["San Francisco"]);
-  const [newLocalidad, setNewLocalidad] = useState("");
-  
-  const [images, setImages] = useState([]);
+  const [formData, setFormData] = useState(eventFormData);
+  const dispatch = useDispatch();
+  const places = useSelector(selectSorterPlaces);
+  const [imageUrl, setImageUrl] = useState(null);
 
-  const handleLocalidadChange = (e) => {
-    const selectedLocalidad = e.target.value;
-    if (selectedLocalidad === "new") {
-      setNewLocalidad("");
+
+  useEffect(() => {
+    dispatch(GetPlaces());
+  }, [dispatch]);
+
+
+  const handleInputChange = async (e) => {
+    const { name, value, files } = e.target;
+    if (name === "image_url") {
+      const file = files[0];
+      console.log("Selected file:", file);
+      setFormData({ ...formData, image_url: file });
+
+      try {
+        const uploadedUrl = await uploadImageToCloudinary(file);
+        setImageUrl(uploadedUrl);
+        console.log("Uploaded URL:", uploadedUrl);
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
+
+
+
+    } else {
+      setFormData({ ...formData, [name]: value });
     }
   };
 
-  const handleAddLocalidad = () => {
-    if (newLocalidad && !localidad.includes(newLocalidad)) {
-      setLocalidad([...localidad, newLocalidad]);
-      setNewLocalidad("");
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const formDataToSubmit = { ...formData, image_url: imageUrl }
+
+      await dispatch(PostEvents(formDataToSubmit));
+      await dispatch(GetEvents());
+      setFormData(eventFormData);
+
+
+    } catch (error) {
+      console.error("Error al registrar el event: ", error);
     }
   };
 
-  const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files);
-    const maxImages = status === "Premium" ? 5 : 1;
 
-    if (files.length + images.length > maxImages) {
-      alert(`Los usuarios ${status} pueden subir hasta ${maxImages} imagen(es).`);
-      return;
-    }
 
-    setImages([...images, ...files]);
-  };
+
+  console.log(formData);
+
   return (
     <div className="p-4 border rounded shadow bg-white h-screen overflow-y-auto">
-       <h1 className="text-xl font-bold mb-4">Nuevo Evento</h1>
-      <form className="space-y-4">
+      <h1 className="text-xl font-bold mb-4">Nuevo Evento</h1>
+      <form className="space-y-4" onSubmit={handleSubmit}>
         {/* Título */}
         <div>
-          <label htmlFor="title" className="block font-semibold">Título:</label>
+          <label htmlFor="title" className="block font-semibold">
+            Título:
+          </label>
           <input
             type="text"
             id="title"
             name="title"
             className="w-full border p-2 rounded"
+            value={formData.title}
+            onChange={handleInputChange}
             placeholder="Ingrese el título"
           />
         </div>
 
         {/* Descripción */}
         <div>
-          <label htmlFor="description" className="block font-semibold">Descripción:</label>
+          <label htmlFor="description_event" className="block font-semibold">
+            Descripción:
+          </label>
           <textarea
-            id="description"
-            name="description"
+            id="description_event"
+            name="description_event"
             className="w-full border p-2 rounded"
+            value={formData.description_event}
+            onChange={handleInputChange}
             placeholder="Ingrese la descripción"
             rows="4"
           ></textarea>
         </div>
+
+        {/* Lugar */}
         <div>
-          <label htmlFor="localidad" className="block font-semibold">Localidad:</label>
+          <label htmlFor="id_places" className="block font-semibold">
+            Lugar:
+          </label>
           <select
-            id="localidad"
-            name="localidad"
+            id="id_places"
+            name="id_places"
             className="w-full border p-2 rounded"
-            onChange={handleLocalidadChange}
+            value={formData.id_places}
+            onChange={handleInputChange}
           >
-            {localidad.map((localida, index) => (
-              <option key={index} value={localida}>{localida}</option>
+            <option value="" disabled>
+              {places.length === 0 ? "Cargando lugares..." : "Seleccione un lugar"}
+            </option>
+            {places.map((place) => (
+              <option key={place.id} value={place.id}>
+                {place.title}
+              </option>
             ))}
-            <option value="new">Agregar nueva localidad</option>
           </select>
-          {newLocalidad !== null && (
-            <div className="mt-2">
-              <input
-                type="text"
-                value={newLocalidad}
-                onChange={(e) => setNewLocalidad(e.target.value)}
-                className="w-full border p-2 rounded"
-                placeholder="Nueva localidad"
-              />
-              <button
-                type="button"
-                onClick={handleAddLocalidad}
-                className="bg-blue-500 text-white mt-2 p-2 rounded hover:bg-blue-600"
-              >
-                Agregar localidad
-              </button>
-            </div>
-          )}
         </div>
+
+        {/* Subir imagen */}
         <div>
-          <label htmlFor="image" className="block font-semibold">Subir Imagen:</label>
+          <label htmlFor="image_url" className="block font-semibold">
+            URL de la imagen:
+          </label>
           <input
             type="file"
-            id="image"
-            name="image"
+            id="image_url"
+            name="image_url"
             className="w-full border p-2 rounded"
-            accept="image/*"
-            multiple={status === "Premium"}
-            onChange={handleImageUpload}
+            placeholder="Ingrese la URL de la imagen"
+            onChange={handleInputChange}
           />
-          <p className="text-sm text-gray-600">{`Puedes subir hasta ${status === "Premium" ? 5 : 1} imagen(es).`}</p>
+          <p className="text-sm text-gray-600">
+            {`Puedes subir hasta ${status === "Premium" ? 5 : 1} imagen(es).`}
+          </p>
         </div>
-        </form>
-      
+        {imageUrl && (<img src={imageUrl} />)}
+
+        {/* Hora de inicio */}
+        <div>
+          <label htmlFor="start_time" className="block font-semibold">
+            Hora de inicio:
+          </label>
+          <input
+            type="time"
+            id="start_time"
+            name="start_time"
+            className="w-full border p-2 rounded"
+            value={formData.start_time}
+            onChange={handleInputChange}
+          />
+        </div>
+
+        {/* Hora de fin */}
+        <div>
+          <label htmlFor="end_time" className="block font-semibold">
+            Hora de fin:
+          </label>
+          <input
+            type="time"
+            id="end_time"
+            name="end_time"
+            className="w-full border p-2 rounded"
+            value={formData.end_time}
+            onChange={handleInputChange}
+          />
+        </div>
+
+        {/* Botón de envío */}
+        <button
+          type="submit"
+          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+        >
+          Crear Evento
+        </button>
+      </form>
     </div>
-  )
+
+  );
 }
 
-export default EventosAdmin
+export default EventosAdmin;

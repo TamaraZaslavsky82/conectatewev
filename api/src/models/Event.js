@@ -5,7 +5,7 @@ const EventsSchema = new Schema(
   {
     title: { type: String },
     description: { type: String },
-    image: [{ type: String }], // Array de URLs de imágenes en Cloudinary
+    images: [{ type: String }], // Array de URLs de imágenes en Cloudinary
     location: {
       latitude: { type: Number },
       longitude: { type: Number },

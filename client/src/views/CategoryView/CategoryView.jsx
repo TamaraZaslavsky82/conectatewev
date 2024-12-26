@@ -1,12 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Sidebar from "../../components/SideBar/SideBar";
 import SearchSection from "../home/SearchSection/SearchSection";
-import Card from "../../components/Cards/Cards"; // Reutilizando el componente Card
-import Map from "../../components/Map/Map"; // Componente del mapa
+import Cards from "../../components/Cards/Cards";
+import Map from "../../components/Map/Map";
+import { GetPlaces, GetCategories } from "../../redux/actions"; // Asegúrate de tener estas acciones
 
 function CategoryView() {
+  const dispatch = useDispatch();
+
+  // Obtener lugares y categorías del store
+  const places = useSelector((state) => state.places); // Asegúrate de que `places` esté definido en el reducer
+  const categories = useSelector((state) => state.categories); // Asegúrate de que `categories` esté definido en el reducer
+
   const [showMap, setShowMap] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState("");
+
+  useEffect(() => {
+    dispatch(GetPlaces());
+    dispatch(GetCategories());
+  }, [dispatch]);
+
+  // Filtrar lugares por categoría seleccionada
+  const filteredPlaces = selectedCategory
+    ? places.filter((place) => place.category === selectedCategory)
+    : places;
 
   const toggleView = () => {
     setShowMap((prev) => !prev);
@@ -17,7 +35,7 @@ function CategoryView() {
   };
 
   const handleBackToCategories = () => {
-    setSelectedCategory(null);
+    setSelectedCategory("");
   };
 
   return (
@@ -33,10 +51,10 @@ function CategoryView() {
           <div>
             <h2 className="text-xl font-bold mb-4">{selectedCategory}</h2>
             <div className="space-y-4">
-              {Array.from({ length: 5 }).map((_, index) => (
-                <div key={index} className="border-b border-gray-300 pb-2">
-                  <h3 className="text-lg font-semibold">Título {index + 1}</h3>
-                  <p className="text-sm text-gray-600">Breve descripción del elemento {index + 1}.</p>
+              {filteredPlaces.map((place) => (
+                <div key={place.id} className="border-b border-gray-300 pb-2">
+                  <h3 className="text-lg font-semibold">{place.name}</h3>
+                  <p className="text-sm text-gray-600">{place.description}</p>
                 </div>
               ))}
             </div>
@@ -50,13 +68,13 @@ function CategoryView() {
         ) : (
           <div>
             <h2 className="text-lg font-semibold mb-4">Categorías</h2>
-            {Array.from({ length: 9 }).map((_, index) => (
+            {categories.map((category) => (
               <div
-                key={index}
+                key={category.id}
                 className="mb-4 border-b border-gray-300 pb-2 cursor-pointer"
-                onClick={() => handleCategoryClick(`Categoría ${index + 1}`)}
+                onClick={() => handleCategoryClick(category.name)}
               >
-                Categoría {index + 1}
+                {category.name}
               </div>
             ))}
           </div>
@@ -80,9 +98,7 @@ function CategoryView() {
             >
               {showMap ? "Volver a Cards" : "Buscar en el mapa"}
             </button>
-            <button
-              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-            >
+            <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
               Ordenar por
             </button>
           </div>
@@ -93,13 +109,16 @@ function CategoryView() {
               <Map />
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {/* Generar tres cards por fila */}
-                {Array.from({ length: 9 }).map((_, index) => (
-                  <Card
-                    key={index}
-                    title={`Card ${index + 1}`}
-                    buttonText={`Ver Más`}
-                  />
+                {filteredPlaces.map((place) => (
+                  <Cards
+                  key={place.id}
+                  image={place.image_url}
+                  title={place.title}
+                  description={place.description_place}
+                  buttonText="Ver Más"
+                  isPremium={place.status_type === 0} // Ejemplo: status_type 0 indica "premium"
+                />
+                
                 ))}
               </div>
             )}

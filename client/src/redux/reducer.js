@@ -13,7 +13,7 @@ const initialState = {
     offersDetail: [],
     pauta: [],
     pautaDetail: [],
-    place: [],
+    places: [],
     placeDetail: [],
     premiumPlaceImg: [],
     premiumPlaceImgDetail: [],
@@ -239,7 +239,7 @@ const rootReducer = (state = initialState, action) => {
         case "GET_PLACES":
             return {
                 ...state,
-                place: action.payload,
+                places: action.payload,
             };
 
         case "GET_ID_PLACE":
@@ -256,7 +256,7 @@ const rootReducer = (state = initialState, action) => {
         case "UPDATE_PLACE":
             return {
                 ...state,
-                place: state.pauta.map((item) => {
+                places: state.places.map((item) => {
                     return item.id === action.payload.id ? action.payload : item;
                 }),
             };
@@ -264,7 +264,7 @@ const rootReducer = (state = initialState, action) => {
         case "DELETE_PLACE":
             return {
                 ...state,
-                place: state.place.filter((item) => item.id !== action.payload),
+                places: state.places.filter((item) => item.id !== action.payload),
             };
         case "GET_PREMIUM_PLACE_IMG":
             return {
