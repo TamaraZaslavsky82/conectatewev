@@ -9,7 +9,7 @@ const CardEvent = ({ title, description, image, buttonText, onButtonClick }) => 
       <img
         src={image}
         alt={title}
-        className="w-full h-48 object-cover rounded-t-lg transition-transform duration-300 group-hover:scale-110"
+        className="w-full h-72 object-cover rounded-t-lg transition-transform duration-300 group-hover:scale-110"
       />
       <div className="p-4">
         <h3 className="text-xl font-semibold text-gray-800">{title}</h3>

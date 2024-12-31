@@ -16,8 +16,18 @@ const Sidebar = ({ onCategorySelect }) => {
       });
   }, [dispatch]);
 
+  // Ordenar categorías alfabéticamente
+  const sortedCategories = categories
+    ? [...categories].sort((a, b) => {
+        const nameA = (a.name || a.category || "").toLowerCase();
+        const nameB = (b.name || b.category || "").toLowerCase();
+        return nameA.localeCompare(nameB);
+      })
+    : [];
+
   return (
-    <div className="bg-blue-950 text-white w-64 h-screen p-4">
+    <div className="bg-blue-950 text-white w-64 h-screen md:h-screen p-4 overflow-y-auto">
+
       {/* Título */}
       <h2 className="text-lg font-bold mb-4">Selecciona una categoría</h2>
 
@@ -31,8 +41,8 @@ const Sidebar = ({ onCategorySelect }) => {
           Todas las categorías
         </li>
 
-        {categories && categories.length > 0 ? (
-          categories.map((category) => (
+        {sortedCategories.length > 0 ? (
+          sortedCategories.map((category) => (
             <li
               key={category.id} // Usa `id` como clave única
               onClick={() => onCategorySelect(category.id)} // Selecciona categoría específica

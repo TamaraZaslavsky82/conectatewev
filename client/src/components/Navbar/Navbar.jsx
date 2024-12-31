@@ -14,11 +14,11 @@ import { WiDaySunny, WiCloud, WiRain, WiSnow, WiFog } from "react-icons/wi";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [weatherData, setWeatherData] = useState(null); // Estado para el clima
+  const [weatherData, setWeatherData] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para controlar el modal
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Detectar desplazamiento
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 0);
@@ -28,7 +28,6 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Obtener datos del clima
   useEffect(() => {
     const fetchWeather = async () => {
       try {
@@ -46,16 +45,14 @@ const Navbar = () => {
     fetchWeather();
   }, []);
 
-  // Funciones de navegación
   const handleNavigate = (route) => {
     if (location.pathname !== route) {
       navigate(route);
     }
   };
 
-  // Seleccionar ícono según el clima
   const getWeatherIcon = () => {
-    if (!weatherData) return <WiDaySunny size={28} className="text-yellow-400" />; // Ícono por defecto (cargando o sin datos)
+    if (!weatherData) return <WiDaySunny size={28} className="text-yellow-400" />;
 
     const weatherCondition = weatherData.weather[0].main;
 
@@ -83,7 +80,6 @@ const Navbar = () => {
       }`}
     >
       <div className="container mx-auto flex justify-between items-center space-x-1 py-4 px-1">
-        {/* Clima */}
         <div className="flex items-center space-x-2">
           {getWeatherIcon()}
           {weatherData ? (
@@ -95,42 +91,43 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Botones principales */}
         <div className="flex space-x-4">
-          <NavButton
-            icon={<FaHome />}
-            label="Inicio"
-            onClick={() => handleNavigate("/")}
-          />
-          <NavButton
-            icon={<FaTags />}
-            label="Categorías"
-            onClick={() => handleNavigate("/categorias")}
-          />
-          <NavButton icon={<FaMapMarkerAlt />} label="Mapa" />
-          <NavButton
-            icon={<FaCalendarAlt />}
-            label="Eventos"
-            onClick={() => handleNavigate("/eventos")}
-          />
-          <NavButton
-            icon={<FaShoppingCart />}
-            label="Ofertas"
-            onClick={() => handleNavigate("/ofertas")}
-          />
-          <NavButton
-            icon={<FaUserPlus />}
-            label="Sumate"
-            onClick={() => handleNavigate("/sumate")}
-          />
+          <NavButton icon={<FaHome />} label="Inicio" onClick={() => handleNavigate("/")} />
+          <NavButton icon={<FaTags />} label="Categorías" onClick={() => handleNavigate("/categorias")} />
+          <NavButton icon={<FaMapMarkerAlt />} label="Mapa" onClick={() => setIsModalOpen(true)} /> {/* Abre el modal */}
+          <NavButton icon={<FaCalendarAlt />} label="Eventos" onClick={() => handleNavigate("/eventos")} />
+          <NavButton icon={<FaShoppingCart />} label="Ofertas" onClick={() => handleNavigate("/ofertas")} />
+          <NavButton icon={<FaUserPlus />} label="Sumate" onClick={() => handleNavigate("/sumate")} />
         </div>
 
-        {/* Redes Sociales */}
         <div className="flex flex-col space-y-2">
           <SocialButton icon={<FaFacebook />} link="https://facebook.com" />
           <SocialButton icon={<FaInstagram />} link="https://instagram.com" />
         </div>
       </div>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg">
+            <h2 className="text-lg  text-black font-semibold mb-4">Descargar Mapas</h2>
+            <p className="mb-4 text-black">Desde este lugar tenemos disponible por el momento el mapa de rutas de todo San Luis.</p>
+            <a
+              href="/mapaSL.pdf" // Ruta del PDF en la carpeta public
+              download="mapaSL.pdf"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-block text-center"
+            >
+              Descargar Mapa
+            </a>
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };

@@ -69,7 +69,7 @@ const SearchSection = () => {
             <div className="w-16 h-16 flex items-center justify-center bg-gray-800 rounded-full">
               <FaUtensils className="text-white w-8 h-8" />
             </div>
-            <span className="mt-2 text-sm">Comida</span>
+            <span className="mt-2 text-sm">Gastronimia</span>
           </div>
           {/* Ícono de alojamiento */}
           <div className="flex flex-col items-center">
@@ -83,7 +83,7 @@ const SearchSection = () => {
             <div className="w-16 h-16 flex items-center justify-center bg-gray-800 rounded-full">
               <FaMapMarkedAlt className="text-white w-8 h-8" />
             </div>
-            <span className="mt-2 text-sm">Mapa</span>
+            <span className="mt-2 text-sm">Paisajes</span>
           </div>
         </div>
       </div>

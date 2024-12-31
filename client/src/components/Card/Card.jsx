@@ -96,9 +96,8 @@ const Card = () => {
       alert('La funcionalidad para compartir no está soportada en este navegador.');
     }
   };
-  
 
-  const { title, description_place, image_url, latitude, longitude,phone } = place;
+  const { title, description_place, image_url, latitude, longitude, phone } = place;
 
   return (
     <div className="min-h-screen bg-gray-100 flex">
@@ -119,7 +118,15 @@ const Card = () => {
             className="object-cover h-80 w-full rounded-lg"
           />
           <p className="text-gray-700 text-base">{description_place}</p>
-          <p className="text-gray-700 text-base">Telefono de contacto: {phone}</p>
+          <p className="text-gray-700 text-base">Teléfono de contacto: {phone}</p>
+          <div className="flex space-x-4">
+            <a href={`tel:${phone}`} className="bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded-md shadow-md">
+              Llamar
+            </a>
+            <a href={`https://wa.me/${phone}`} className="bg-green-600 hover:bg-green-800 text-white px-4 py-2 rounded-md shadow-md">
+              Enviar WhatsApp
+            </a>
+          </div>
           {/* Mapa */}
           <div className="w-full h-96 mt-4">
             <MapContainer
@@ -132,22 +139,20 @@ const Card = () => {
                 url="https://basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
                 attribution='&copy; <a href="https://www.carto.com/">CARTO</a>'
               />
-              
               <Marker position={[latitude, longitude]} icon={customMarker}>
                 <Popup>{title}</Popup>
               </Marker>
               <RoutingControl destination={[latitude, longitude]} />
             </MapContainer>
           </div>
-      <button
-  onClick={handleShare}
-  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md shadow-md"
->
-  Compartir
-</button>
+          <button
+            onClick={handleShare}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md shadow-md"
+          >
+            Compartir
+          </button>
         </div>
       </div>
-
     </div>
   );
 };

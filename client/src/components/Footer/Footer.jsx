@@ -11,7 +11,7 @@ const Footer = () => {
         </p>
         <div className="flex justify-center items-center space-x-4">
           <img src={conexion} alt="Logo Conexión San Luis" className="h-12" />
-          <img src={conectate} alt="Logo Conéctate App" className="h-12" />
+          <img src={conectate} alt="Logo Conéctate App" className="h-20" />
         </div>
       </div>
     </footer>

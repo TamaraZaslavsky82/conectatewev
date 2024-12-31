@@ -72,7 +72,7 @@ const PromotionViews = () => {
           ))
         ) : (
           <div className="col-span-full text-center text-gray-500">
-            No hay offeros disponibles.
+            No hay ofertas disponibles en la localidad.
           </div>
         )}
       </div>

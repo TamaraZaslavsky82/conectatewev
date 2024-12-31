@@ -116,8 +116,8 @@ const EventView = () => {
       {/* Sección de eventos actuales */}
       {upcomingEvents.length > 0 && (
         <div>
-          <h2 className="text-xl font-semibold mb-4">Eventos Activos</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-120">
             {upcomingEvents.map((event) => (
               <CardEvent
                 key={event.id} // Asegúrate de que cada evento tenga un id único
