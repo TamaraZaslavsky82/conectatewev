@@ -5,6 +5,7 @@ import NuevoAdmin from "./NuevoAdmin";
 import EventosAdmin from "./EventosAdmin";
 import OfertasAdmin from "./OfertasAdmin";
 import BannersAdmin from "./BannersAdmin";
+import ModifyPlace from "./ModifyPlace";
 
 function DashboardAdmin() {
   const [seccion, setSeccion] = useState("Nuevo"); // Estado para la sección activa
@@ -20,6 +21,8 @@ function DashboardAdmin() {
         return <OfertasAdmin />;
       case "Banners":
         return <BannersAdmin />;
+      case "Actualizacion places":
+        return <ModifyPlace />;
       default:
         return <NuevoAdmin />;
     }

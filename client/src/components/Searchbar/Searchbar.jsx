@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom'; // Importa useNavigate para navegar
 import { GetCategories, GetEvents, GetOffers, GetPlaces } from '../../redux/actions';
+import imagen from '../../assets/logoconectate.png'
 
 // ModalFree (componente modal)
 const ModalFree = ({ onClose, children }) => {
@@ -144,17 +145,38 @@ const Searchbar = () => {
       {/* Mostrar el ModalFree cuando se haya seleccionado un lugar */}
       {isModalOpen && selectedPlace && (
         <ModalFree onClose={closeModal}>
-          <div className="p-6">
-            {/* Aseguramos que la clase es 'text-black' */}
-            <h2 className="text-2xl font-bold mb-4 text-black">{selectedPlace.title}</h2>
-            <img
-              src={selectedPlace.image_url}
-              alt={selectedPlace.title}
-              className="w-full h-64 object-cover rounded-md mb-4"
-            />
-            {/* Aseguramos que la clase es 'text-black' */}
-            <p className="text-2xl  mb-4 text-black">{selectedPlace.description_place}</p>
-          </div>
+         <div className="p-6">
+                    <h2 className="text-2xl font-bold mb-4 text-black">{selectedPlace.title}</h2>
+                    <img
+                      src={imagen}
+                      alt={selectedPlace.title}
+                      className="w-full h-64 object-cover rounded-md mb-4"
+                    />
+                    <p className="text-gray-700 text-base">{selectedPlace.description_place}</p>
+                    <p className="text-gray-700 text-base">
+                      Teléfono de contacto: {selectedPlace.phone}
+                    </p>
+                    <div className="flex space-x-4">
+                      <a
+                        href={`tel:${selectedPlace.phone}`}
+                        className="bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded-md shadow-md"
+                      >
+                        Llamar
+                      </a>
+                      <a
+                        href={`https://wa.me/${selectedPlace.phone}`}
+                        className="bg-green-600 hover:bg-green-800 text-white px-4 py-2 rounded-md shadow-md"
+                      >
+                        Enviar WhatsApp
+                      </a>
+                    </div>
+                    <button
+                      onClick={closeModal}
+                      className="mt-4 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                    >
+                      Cerrar
+                    </button>
+                  </div>
         </ModalFree>
       )}
     </div>

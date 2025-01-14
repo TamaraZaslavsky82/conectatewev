@@ -4,8 +4,9 @@ import {
   PostPlace,
   GetCities,
   GetCategories,
- 
-} from "../../redux/actions"; // Asegúrate de que estas acciones estén correctamente implementadas
+  PostPremiumPlaceImg,
+  PostSocialMedia
+} from "../../redux/actions"; 
 import { selectSorterPlaces } from "../../redux/selectors/selectors";
 import { placesFormData, uploadImageToCloudinary } from "../../components/utils";
 
@@ -13,10 +14,8 @@ const CreatePlaceForm = () => {
   const [formData, setFormData] = useState(placesFormData);
   const dispatch = useDispatch();
 
-  // Obtén las ciudades y categorías del estado global
-  const cities = useSelector((state) => state.cities || []); // Usa un array vacío si es undefined
-  const categories = useSelector((state) => state.categories || []); // Usa un array vacío si es undefined
-  
+  const cities = useSelector((state) => state.cities || []);
+  const categories = useSelector((state) => state.categories || []);
   const places = useSelector(selectSorterPlaces);
 
   const [imageUrl, setImageUrl] = useState(null);
@@ -46,16 +45,29 @@ const CreatePlaceForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Formulario enviado");
-  
+
     try {
       console.log(formData);
       
       const formDataToSubmit = { ...formData, image_url: imageUrl };
       console.log("Datos enviados al backend:", formDataToSubmit);
-  await dispatch (PostPlace(formDataToSubmit));
-     
-    
-  
+      await dispatch(PostPlace(formDataToSubmit));
+
+      if (formData.status_type === 0) {  // Si el lugar es Premium
+        const premiumImgData = {
+          image_url: imageUrl,
+          id_place: formData.id_place
+        };
+        const socialMediaData = {
+          social_media_type: 'facebook', 
+          id_place: formData.id_place,
+          link: 'https://facebook.com' 
+        };
+
+        await dispatch(PostPremiumPlaceImg(premiumImgData));
+        await dispatch(PostSocialMedia(socialMediaData));
+      }
+
       alert("Lugar creado con éxito");
     } catch (error) {
       console.error("Error en handleSubmit:", error);
@@ -112,12 +124,10 @@ const CreatePlaceForm = () => {
           >
             <option value="">Selecciona una categoría</option>
             {categories.map((category, index) => (
-  <option key={category.id || index} value={category.id}>
-    {category.category}
-  </option>
-))}
-
-            
+              <option key={category.id || index} value={category.id}>
+                {category.category}
+              </option>
+            ))}
           </select>
         </div>
         <div>
@@ -148,8 +158,8 @@ const CreatePlaceForm = () => {
             onChange={handleInputChange}
             className="w-full border rounded p-2"
           >
-            <option value={0}>Premium</option>
             <option value={1}>Free</option>
+            <option value={0}>Premium</option>
           </select>
         </div>
         <div>

@@ -15,12 +15,15 @@ const DestacadosSection = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (places.length > 0) {
+    if (places && Array.isArray(places) && places.length > 0) {
       const premiumPlaces = places.filter((place) => place.status_type === 0);
       const shuffled = premiumPlaces.sort(() => 0.5 - Math.random());
       setPremiumCards(shuffled.slice(0, 3));
+    } else {
+      console.error("places no es un array o está vacío:", places);
     }
   }, [places]);
+  
 
   const handleViewMore = (id) => {
     navigate(`/place/${id}`);

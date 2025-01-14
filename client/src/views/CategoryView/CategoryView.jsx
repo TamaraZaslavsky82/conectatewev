@@ -197,9 +197,7 @@ function CategoryView() {
               className="w-full h-64 object-cover rounded-md mb-4"
             />
             <p>{selectedPlace.description_place}</p>
-            <p className="text-gray-700 text-base">
-              Teléfono de contacto: {selectedPlace.phone}
-            </p>
+            
             <div className="flex space-x-4">
               <a
                 href={`tel:${selectedPlace.phone}`}

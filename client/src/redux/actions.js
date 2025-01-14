@@ -639,18 +639,25 @@ export const GetOffersDetail = (id) => {
 };
 
 export const PostOffers = (atributos) => {
+    console.log(atributos);
+
     return async function (dispatch) {
         try {
             var f = new FormData();
             f.append("METHOD", "POST");
             f.append("title", atributos.title);
-            f.append("description_offer", atributos.offer);
+            f.append("description_offer", atributos.description_offer);
+            f.append("image_url", atributos.image_url);
             f.append("start_time", atributos.start_time);
             f.append("end_time", atributos.end_time);
             f.append("id_places", atributos.id_places);
-            f.append("image_url", atributos.image_url);
-            var response = await axios.post(offersURL, f);
-            console.log("Oferta creada: ", response.data);
+
+            var response = await axios.post(offersURL, f, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            console.log("Evento creada: ", response.data);
             return dispatch({
                 type: POST_OFFER,
                 payload: response.data,
@@ -661,6 +668,7 @@ export const PostOffers = (atributos) => {
         }
     };
 };
+
 
 export const UpdateOffers = (id, atributos) => {
     return async function (dispatch) {

@@ -2,13 +2,25 @@ import React, { useState, useEffect } from "react";
 
 const ModalEvent = ({ events }) => {
   const [currentEvent, setCurrentEvent] = useState(null);
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     if (events && events.length > 0) {
-      // Seleccionar un evento aleatorio
-      const randomIndex = Math.floor(Math.random() * events.length);
-      setCurrentEvent(events[randomIndex]);
+      // Filtrar eventos que no hayan caducado
+      const validEvents = events.filter(
+        (event) => new Date(event.end_time) > new Date()
+      );
+
+      if (validEvents.length > 0) {
+        // Seleccionar un evento aleatorio de los vigentes
+        const randomIndex = Math.floor(Math.random() * validEvents.length);
+        setCurrentEvent(validEvents[randomIndex]);
+        setIsVisible(true); // Mostrar el modal si hay eventos válidos
+      } else {
+        setIsVisible(false); // No mostrar el modal si no hay eventos válidos
+      }
+    } else {
+      setIsVisible(false); // No mostrar el modal si no hay eventos
     }
   }, [events]);
 

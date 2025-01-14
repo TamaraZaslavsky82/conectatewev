@@ -1,7 +1,7 @@
 import React from "react";
 
 function SidebarAdmin({ setSeccion }) {
-  const botones = ["Nuevo", "Eventos", "Ofertas", "Banners"];
+  const botones = ["Nuevo", "Eventos", "Ofertas", "Banners","Actualizacion places"];
 
   return (
     <div className="bg-blue-950 text-white w-64 h-screen p-4">

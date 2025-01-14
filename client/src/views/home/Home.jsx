@@ -1,6 +1,6 @@
 import React from "react";
 import Navbar from "../../components/Navbar/Navbar";
-import SearchSection from "./SearchSection/SearchSection";
+import SearchSection from "./SearchSection/SearchSection.jsx";
 import MunicipalidadSection from "./MunicipalidadSection/MunicipalidadSection";
 import DestacadosSection from "./DestacadosSection/DestacadosSection";
 import InformationSection from "./InformationSection/InformationSection";

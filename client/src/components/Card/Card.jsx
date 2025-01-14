@@ -118,7 +118,7 @@ const Card = () => {
             className="object-cover h-80 w-full rounded-lg"
           />
           <p className="text-gray-700 text-base">{description_place}</p>
-          <p className="text-gray-700 text-base">Teléfono de contacto: {phone}</p>
+          
           <div className="flex space-x-4">
             <a href={`tel:${phone}`} className="bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded-md shadow-md">
               Llamar

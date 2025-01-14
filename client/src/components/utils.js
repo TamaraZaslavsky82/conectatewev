@@ -15,6 +15,17 @@ export const citiesFormData = {
   longitude: ''
 }
 
+export const PremiumPlaceImgFormData={
+  image_url:'',
+  id_place:''
+}
+
+export const socialMediaFormData ={
+  social_media_type:'',
+  id_place:'',
+  link:'',
+}
+
 export const placesFormData = {
   title: '',
   description_place: '',

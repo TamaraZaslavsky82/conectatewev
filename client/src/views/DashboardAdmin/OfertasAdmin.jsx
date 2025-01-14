@@ -10,53 +10,43 @@ function OffersAdmin() {
   const places = useSelector(selectSorterPlaces);
   const [imageUrl, setImageUrl] = useState(null);
 
-
   useEffect(() => {
     dispatch(GetPlaces());
   }, [dispatch]);
 
-
-  const handleInputChange = async (e) => {
-    const { name, value, files } = e.target;
-    if (name === "image_url") {
-      const file = files[0];
-      console.log("Selected file:", file);
-      setFormData({ ...formData, image_url: file });
-
-      try {
-        const uploadedUrl = await uploadImageToCloudinary(file);
-        setImageUrl(uploadedUrl);
-        console.log("Uploaded URL:", uploadedUrl);
-      } catch (error) {
-        console.error("Error uploading image:", error);
+  // Función para manejar los cambios en los campos del formulario
+   const handleInputChange = async (e) => {
+      const { name, value, files } = e.target;
+      if (name === "image_url") {
+        const file = files[0];
+        console.log("Selected file:", file);
+        setFormData({ ...formData, image_url: file });
+  
+        try {
+          const uploadedUrl = await uploadImageToCloudinary(file);
+          setImageUrl(uploadedUrl);
+          console.log("Uploaded URL:", uploadedUrl);
+        } catch (error) {
+          console.error("Error uploading image:", error);
+        }
+      } else {
+        setFormData({ ...formData, [name]: value });
       }
+    };
 
-
-
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
-  };
-
+  // Función para manejar el submit del formulario
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const formDataToSubmit = { ...formData, image_url: imageUrl }
-
-      await dispatch(PostOffers(formDataToSubmit));
-      await dispatch(GetOffers());
-      setFormData(offersFormData);
-
-
-    } catch (error) {
-      console.error("Error al registrar el event: ", error);
-    }
-  };
-
-
-
-
-  console.log(formData);
+     e.preventDefault();
+     try {
+       const formDataToSubmit = { ...formData, image_url: imageUrl };
+ 
+       await dispatch(PostOffers(formDataToSubmit));
+       await dispatch(GetOffers());
+       setFormData(offersFormData);
+     } catch (error) {
+       console.error("Error al registrar oferta: ", error);
+     }
+   };
 
   return (
     <div className="p-4 border rounded shadow bg-white h-screen overflow-y-auto">
@@ -80,18 +70,17 @@ function OffersAdmin() {
 
         {/* Descripción */}
         <div>
-          <label htmlFor="description_event" className="block font-semibold">
+          <label htmlFor="description_offer" className="block font-semibold">
             Descripción:
           </label>
           <textarea
-            id="description_event"
-            name="description_event"
-            className="w-full border p-2 rounded"
-            value={formData.description_event}
-            onChange={handleInputChange}
-            placeholder="Ingrese la descripción"
-            rows="4"
-          ></textarea>
+  id="description_offer"
+  name="description_offer"
+  value={formData.description_offer}
+  onChange={handleInputChange}
+  placeholder="Ingrese la descripción"
+></textarea>
+
         </div>
 
         {/* Lugar */}
@@ -127,14 +116,13 @@ function OffersAdmin() {
             id="image_url"
             name="image_url"
             className="w-full border p-2 rounded"
-            placeholder="Ingrese la URL de la imagen"
             onChange={handleInputChange}
           />
           <p className="text-sm text-gray-600">
             {`Puedes subir hasta ${status === "Premium" ? 5 : 1} imagen(es).`}
           </p>
         </div>
-        {imageUrl && (<img src={imageUrl} />)}
+        {imageUrl && (<img src={imageUrl} alt="Imagen subida" className="mt-4 w-32 h-32 object-cover" />)}
 
         {/* Hora de inicio */}
         <div>
@@ -171,11 +159,10 @@ function OffersAdmin() {
           type="submit"
           className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
         >
-          Crear Evento
+          Crear oferta
         </button>
       </form>
     </div>
-
   );
 }
 

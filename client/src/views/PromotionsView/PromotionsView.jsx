@@ -1,86 +1,92 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import SearchSection from '../home/SearchSection/SearchSection';
-import Card from '../../components/Cards/Cards';
-import Pagination from '../../components/Pagination/Pagination';
-import { GetCities, GetOffers } from '../../redux/actions';
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams, useNavigate } from "react-router-dom";
 
-const PromotionViews = () => {
+import Card from "../../components/Cards/Cards";
+import { GetCities, GetOffers } from "../../redux/actions";
+import ModalOfferts from "../../components/ModalOfferts/ModalOfferts";
+import SearchSection from "../Home/SearchSection/SearchSection";
+
+const PromotionView = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { id } = useParams(); // Capturar el ID desde la URL
 
-  // Obtener offeros y localidades de la store
-  const offers = useSelector((state) => state.offers); // Asegúrate de que `offers` esté definido en el reducer
-  const cities = useSelector((state) => state.cities); // Suponiendo que las ciudades están en el reducer
+  const offers = useSelector((state) => state.offers);
+  const cities = useSelector((state) => state.cities);
 
-  const [selectedCity, setSelectedCity] = useState('');
+  const [selectedCity, setSelectedCity] = useState("");
+  const [selectedOffer, setSelectedOffer] = useState(null);
 
   useEffect(() => {
     dispatch(GetOffers());
     dispatch(GetCities());
   }, [dispatch]);
 
-  // Filtrar offeros por ciudad seleccionada
-  const filteredoffers = selectedCity
-    ? offers.filter((offer) => offer.id_places === selectedCity)
-    : offers;
+  useEffect(() => {
+    if (id) {
+      const offer = offers.find((o) => o.id === parseInt(id));
+      if (offer) {
+        const location = cities.find((city) => city.id === offer.id_places)?.city || "Sin localidad";
+        setSelectedOffer({ ...offer, location });
+      }
+    }
+  }, [id, offers, cities]);
 
-  const handleCityChange = (e) => {
-    setSelectedCity(e.target.value);
+  // Filtrar ofertas basadas en la ciudad seleccionada y si no han expirado
+  const filteredOffers = offers
+    .filter((offer) => {
+      const now = new Date();
+      const offerEndDate = new Date(offer.end_time);
+      return offerEndDate >= now; // Solo incluye ofertas válidas
+    })
+    .filter((offer) => (selectedCity ? offer.id_places === selectedCity : true));
+
+  const handleCardClick = (offer) => {
+    navigate(`/ofertas/${offer.id}`);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedOffer(null);
+    navigate("/ofertas");
   };
 
   return (
     <div className="w-full px-0">
-      {/* Sección de búsqueda */}
       <div className="w-full mb-6">
         <SearchSection />
       </div>
-
-      {/* Selector de localidades */}
-      <div className="flex justify-between items-center mb-6 bg-blue-950 text-gray-200 p-4 rounded-md">
-        <div className="text-lg font-semibold">Ofertas disponibles</div>
-        <div className="flex items-center space-x-4">
-          <div className="text-lg font-semibold">Localidades</div>
-          <select
-            value={selectedCity}
-            onChange={handleCityChange}
-            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Todas las localidades</option>
-            {cities &&
-              cities.map((city) => (
-                <option key={city.id} value={city.id}>
-                  {city.city}
-                </option>
-              ))}
-          </select>
-        </div>
-      </div>
-
-      {/* Mostrar las tarjetas de offeros */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {filteredoffers && filteredoffers.length > 0 ? (
-          filteredoffers.map((offer) => (
-            <Card
-              key={offer.id} // Asegúrate de que cada offero tenga un id único
-              title={offer.title}
-              description={offer.description_offer}
-              date={`${offer.start_time} - ${offer.end_time}`}
-              location={cities.find((city) => city.id === offer.id_places)?.city || 'Sin localidad'}
-              image={offer.image_url} // Pasa la URL de la imagen
-              buttonText="Más Info"
-            />
+        {filteredOffers.length > 0 ? (
+          filteredOffers.map((offer) => (
+            <div
+              key={offer.id}
+              onClick={() => handleCardClick(offer)}
+              className="cursor-pointer"
+            >
+              <Card
+                title={offer.title}
+                description={offer.description_offer}
+                location={
+                  cities.find((city) => city.id === offer.id_places)?.city ||
+                  "Sin localidad"
+                }
+                image={offer.image_url}
+                buttonText="Más Info"
+              />
+            </div>
           ))
         ) : (
           <div className="col-span-full text-center text-gray-500">
-            No hay ofertas disponibles en la localidad.
+            No hay ofertas disponibles.
           </div>
         )}
       </div>
-
-      {/* Paginación */}
-      <Pagination />
+      {selectedOffer && (
+        <ModalOfferts offer={selectedOffer} onClose={handleCloseModal} />
+      )}
     </div>
   );
 };
 
-export default PromotionViews;
+export default PromotionView;
