@@ -5,6 +5,8 @@ import { createSelector } from "reselect";
 export const selectPlaces = (state) => state.places;
 export const selectOffers = (state) => state.offers;
 export const selectCities = (state) => state.cities;
+export const selecPremiumImgPlace = (state) => state.premiumPlaceImg;
+
 
 
 //Orden de todos los lugares en orden alfabetico

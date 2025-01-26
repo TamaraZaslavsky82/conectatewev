@@ -1,0 +1,114 @@
+@keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slide-in {
+    from {
+      opacity: 0;
+      transform: translateX(-100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  .intro-page {
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    animation: fade-in 1s ease-in-out;
+  }
+  
+  .overlay-content {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none; /* Permite que los clics pasen a las imágenes */
+    animation: fade-in 1.5s ease-in-out;
+  }
+  
+  .logo {
+    width: 200px; /* Tamaño ajustado del logo */
+    margin-top: 20px;
+    z-index: 10; /* Asegura que el logo esté por encima de otros elementos */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.7); /* Añade una sombra para darle profundidad */
+    filter: brightness(1.2); /* Añade brillo para resaltar */
+    background-color: rgba(245, 240, 240); /* Fondo oscuro semitransparente */
+    border-radius: 10px; /* Bordes redondeados para suavizar el fondo */
+    animation: fade-in 1.5s ease-in-out;
+  }
+  
+  .header-text {
+    margin-top: 10px;
+    text-align: center;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+    animation: fade-in 2s ease-in-out;
+  }
+  
+  .image-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    animation: slide-in 1s ease-in-out;
+  }
+  
+  .image-card {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    animation: fade-in 2s ease-in-out;
+  }
+  
+  .image-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease, filter 0.5s ease;
+  }
+  
+  .image-card:hover img {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+  }
+  
+  .image-footer {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    color: white;
+    font-size: 2.2rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
+  }
+
+  /* Media query para pantallas móviles */
+  @media (max-width: 768px) {
+    .image-container {
+      flex-direction: column; /* Las imágenes estarán una debajo de la otra */
+    }
+
+    .image-card {
+      height: 50vh; /* Ajusta la altura de las imágenes para móviles */
+    }
+  }

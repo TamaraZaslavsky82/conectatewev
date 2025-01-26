@@ -56,7 +56,8 @@ const PromotionView = () => {
       <div className="w-full mb-6">
         <SearchSection />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+   <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+
         {filteredOffers.length > 0 ? (
           filteredOffers.map((offer) => (
             <div

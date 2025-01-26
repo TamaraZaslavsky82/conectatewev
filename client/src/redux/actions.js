@@ -56,6 +56,13 @@ export const GET_ID_SOCIAL_MEDIA = "GET_ID_SOCIAL_MEDIA"
 export const POST_SOCIAL_MEDIA = "POST_SOCIAL_MEDIA"
 export const UPDATE_SOCIAL_MEDIA = "UPDATE_SOCIAL_MEDIA"
 export const DELETE_SOCIAL_MEDIA = "DELETE_SOCIAL_MEDIA"
+export const GET_PHARMACY_ON_DUTY = "GET_PHARMACY_ON_DUTY"
+export const GET_ID_PHARMACY_ON_DUTY = "GET_ID_PHARMACY_ON_DUTY"
+export const POST_PHARMACY_ON_DUTY = "POST_PHARMACY_ON_DUTY"
+export const UPDATE_PHARMACY_ON_DUTY = "UPDATE_PHARMACY_ON_DUTY"
+export const DELETE_PHARMACY_ON_DUTY = "DELETE_PHARMACY_ON_DUTY"
+export const POST_MENSAJE = "POST_MENSAJE"
+export const POST_USER_SUBSCRIPTION = "REGISTER_SUBSCRIPTION"
 
 const categoriesURL = import.meta.env.VITE_API_CATEGORIES_URL;
 const citiesURL = import.meta.env.VITE_API_CITIES_URL;
@@ -68,6 +75,9 @@ const placeURL = import.meta.env.VITE_API_PLACES_URL;
 const premiumPlaceImgURL = import.meta.env.VITE_API_PREMIUM_PLACE_IMG_URL;
 const puntosWifiURL = import.meta.env.VITE_API_PUNTOS_WIFI_URL;
 const socialMediaURL = import.meta.env.VITE_API_SOCIAL_MEDIA_URL;
+const pharmacyOnDutyURL = import.meta.env.VITE_API_PHARMACY_ON_DUTY
+const messageURL = import.meta.env.VITE_API_MENSAJES
+const subscriptionURL = import.meta.env.VITE_API_SUBSCRIPTION
 
 //Actions de Categorias
 
@@ -934,26 +944,31 @@ export const DeletePlace = (id) => {
 
 export const GetPremiumPlaceImg = () => {
     return async function (dispatch) {
-        try {
-            var response = await axios.get(premiumPlaceImgURL);
-            if (response.data !== null) {
-                return dispatch({
-                    type: GET_PREMIUM_PLACE_IMG,
-                    payload: response.data,
-                });
-            } else {
-                return dispatch({
-                    type: GET_PREMIUM_PLACE_IMG,
-                    payload: [],
-                });
-            }
-        } catch (err) {
-            console.log(err);
-            throw err;
+      try {
+        const response = await axios.get(premiumPlaceImgURL);
+        console.log("Respuesta de la API en GetPremiumPlaceImg:", response.data);
+        if (response.data !== null) {
+          return dispatch({
+            type: GET_PREMIUM_PLACE_IMG,
+            payload: response.data.map((img) => ({
+              url_img: img.url_img,
+              id_place: img.id_place, // Asegúrate de incluir id_place
+            })),
+          });
+        } else {
+          return dispatch({
+            type: GET_PREMIUM_PLACE_IMG,
+            payload: [],
+          });
         }
+      } catch (err) {
+        console.error("Error en GetPremiumPlaceImg:", err);
+        throw err;
+      }
     };
-};
-
+  };
+  
+  
 export const GetPremiumPlaceImgDetail = (id) => {
     return async function (dispatch) {
         try {
@@ -977,30 +992,35 @@ export const GetPremiumPlaceImgDetail = (id) => {
 
 export const PostPremiumPlaceImg = (atributos) => {
     return async function (dispatch) {
-        try {
-            var f = new FormData();
-            f.append("METHOD", "POST");
-            f.append("image_url", atributos.image_url);
-            f.append("id_places", atributos.id_places);
-            var response = await axios.post(premiumPlaceImgURL, f);
-            console.log("Imagen premium  creada: ", response.data);
-            return dispatch({
-                type: POST_PREMIUM_PLACE_IMG,
-                payload: response.data,
-            });
-        } catch (err) {
-            console.log(err);
-            throw err;
-        }
+      try {
+        const f = new FormData();
+        f.append("METHOD", "POST");
+        f.append("url_img", atributos.url_img); // El archivo o URL de la imagen
+        f.append("id_place", atributos.id_place);  // El ID del lugar
+  
+        const response = await axios.post(premiumPlaceImgURL, f, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+  
+        console.log("Imagen premium creada: ", response.data);
+        return dispatch({
+          type: POST_PREMIUM_PLACE_IMG,
+          payload: response.data,
+        });
+      } catch (err) {
+        console.error(err);
+        throw err;
+      }
     };
-};
+  };
+  
 
 export const UpdatePremiumPlaceImg = (id, atributos) => {
     return async function (dispatch) {
         try {
             var f = new FormData();
             f.append("METHOD", "PUT");
-            f.append("image_url", atributos.image_url);
+            f.append("url_img", atributos.url_img);
             f.append("id_places", atributos.id_places);
             var response = await axios.post(premiumPlaceImgURL, f, { params: { id: id } });
             return dispatch({
@@ -1183,7 +1203,7 @@ export const PostSocialMedia = (atributos) => {
             var f = new FormData();
             f.append("METHOD", "POST");
             f.append("social_media_type", atributos.social_media_type);
-            f.append("id_places", atributos.id_places);
+            f.append("id_place", atributos.id_place);
             f.append("link", atributos.link);
             var response = await axios.post(socialMediaURL, f);
             console.log("Social Media creado: ", response.data);
@@ -1230,6 +1250,167 @@ export const DeleteSocialMedia = (id) => {
             });
         } catch (err) {
             console.log(err);
+        }
+    };
+};
+
+//Action Pharmacy_on_duty
+
+
+export const GetPharmacyOnDuty = () => {
+    return async function (dispatch) {
+        try {
+            var response = await axios.get(pharmacyOnDutyURL);
+            if (response.data !== null) {
+                return dispatch({
+                    type: GET_PHARMACY_ON_DUTY,
+                    payload: response.data,
+                });
+            } else {
+                return dispatch({
+                    type: GET_PHARMACY_ON_DUTY,
+                    payload: [],
+                });
+            }
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
+    };
+};
+
+export const GetPharmacyOnDutyDetail = (id) => {
+    return async function (dispatch) {
+        try {
+            const response = await axios.get(`${pharmacyOnDutyURL}?id=${id}`);
+            if (response.data) {
+                return dispatch({
+                    type: GET_ID_PHARMACY_ON_DUTY,
+                    payload: response.data,
+                });
+            } else {
+                return dispatch({
+                    type: GET_PHARMACY_ON_DUTY,
+                    payload: [],
+                });
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
+};
+
+export const PostPharmacyOnDuty = (atributos) => {
+    return async function (dispatch) {
+        try {
+            var f = new FormData();
+            f.append("METHOD", "POST");
+            f.append("start_time", atributos.start_time);
+            f.append("id_places", atributos.id_places);
+            f.append("end_time", atributos.end_time);
+            f.append("id_city", atributos.id_city);
+            f.append("id_category", atributos.id_category);
+            f.append("title", atributos.title);
+            var response = await axios.post(pharmacyOnDutyURL, f);
+            console.log("Social Media creado: ", response.data);
+            return dispatch({
+                type: POST_PHARMACY_ON_DUTY,
+                payload: response.data,
+            });
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
+    };
+};
+
+export const UpdatePharmacyOnDuty = (id, atributos) => {
+    return async function (dispatch) {
+        try {
+            var f = new FormData();
+            f.append("METHOD", "POST");
+            f.append("start_time", atributos.start_time);
+            f.append("id_places", atributos.id_places);
+            f.append("end_time", atributos.end_time);
+            f.append("id_city", atributos.id_city);
+            f.append("id_category", atributos.id_category);
+            f.append("title", atributos.title);
+            var response = await axios.post(pharmacyOnDutyURL, f, { params: { id: id } });
+            return dispatch({
+                type: UPDATE_PHARMACY_ON_DUTY,
+                payload: response.data,
+            });
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
+    };
+};
+
+export const DeletePharmacyOnDuty = (id) => {
+    return async function (dispatch) {
+        try {
+            var f = new FormData();
+            f.append("METHOD", "DELETE");
+            var response = await axios.post(pharmacyOnDutyURL, f, { params: { id: id } });
+            return dispatch({
+                type: DELETE_PHARMACY_ON_DUTY,
+                payload: response.id,
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    };
+};
+
+//mensaje
+
+export const PostMensaje = (atributos) => {
+    return async function (dispatch) {
+        try {
+            var f = new FormData();
+            f.append("METHOD", "POST");
+            f.append("nombre", atributos.nombre);
+            f.append("apellido", atributos.apellido);
+            f.append("telefono", atributos.telefono);
+            f.append("mensaje", atributos.mensaje);
+            var response = await axios.post(messageURL, f);
+            console.log("Social Media creado: ", response.data);
+            return dispatch({
+                type: POST_MENSAJE,
+                payload: response.data,
+            });
+        } catch (err) {
+            console.log(err);
+            throw err;
+        }
+    };
+};
+
+
+//push notification
+export const RegisterSubscription = (subscription) => {
+    return async function (dispatch) {
+        try {
+            // Crear un FormData para enviar los datos de la suscripción
+            var f = new FormData();
+            f.append("METHOD", "POST");
+            f.append("endpoint", subscription.endpoint);
+            f.append("p256dh", subscription.keys.p256dh);
+            f.append("auth", subscription.keys.auth);
+
+            // Enviar la suscripción al backend
+            var response = await axios.post(subscriptionURL, f);
+            console.log("Suscripción registrada: ", response.data);
+
+            // Despachar la acción con la constante POST_USER_SUBSCRIPTION
+            return dispatch({
+                type: POST_USER_SUBSCRIPTION,
+                payload: response.data,
+            });
+        } catch (err) {
+            console.log("Error al registrar la suscripción:", err);
+            throw err;
         }
     };
 };

@@ -7,26 +7,18 @@ import {
   FaCalendarAlt,
   FaShoppingCart,
   FaUserPlus,
+  FaPhoneAlt,
   FaFacebook,
   FaInstagram,
 } from "react-icons/fa";
 import { WiDaySunny, WiCloud, WiRain, WiSnow, WiFog } from "react-icons/wi";
+import PharmacyOnDutyList from "../../views/home/PharmacyOnDutyList";
 
 const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [weatherData, setWeatherData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false); // Estado para controlar el modal
   const navigate = useNavigate();
   const location = useLocation();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   useEffect(() => {
     const fetchWeather = async () => {
@@ -74,11 +66,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav
-      className={`font-inter text-primary fixed w-screen top-0 z-50 shadow-md transition-all duration-300 ${
-        isScrolled ? "bg-blue-950 text-white" : "bg-transparent text-primary"
-      }`}
-    >
+    <nav className="font-inter text-primary fixed w-screen top-0 z-50 shadow-md bg-blue-950 text-white">
       <div className="container mx-auto flex justify-between items-center space-x-1 py-4 px-1">
         <div className="flex items-center space-x-2">
           {getWeatherIcon()}
@@ -92,9 +80,9 @@ const Navbar = () => {
         </div>
 
         <div className="flex space-x-4">
-          <NavButton icon={<FaHome />} label="Inicio" onClick={() => handleNavigate("/")} />
+          <NavButton icon={<FaHome />} label="Inicio" onClick={() => handleNavigate("/home")} />
           <NavButton icon={<FaTags />} label="Categorías" onClick={() => handleNavigate("/categorias")} />
-          <NavButton icon={<FaMapMarkerAlt />} label="Mapa" onClick={() => setIsModalOpen(true)} /> {/* Abre el modal */}
+          <NavButton icon={<FaPhoneAlt />} label="Teléfonos Útiles" onClick={() => setIsModalOpen(true)} />
           <NavButton icon={<FaCalendarAlt />} label="Eventos" onClick={() => handleNavigate("/eventos")} />
           <NavButton icon={<FaShoppingCart />} label="Ofertas" onClick={() => handleNavigate("/ofertas")} />
           <NavButton icon={<FaUserPlus />} label="Sumate" onClick={() => handleNavigate("/sumate")} />
@@ -104,28 +92,29 @@ const Navbar = () => {
           <SocialButton icon={<FaFacebook />} link="https://facebook.com" />
           <SocialButton icon={<FaInstagram />} link="https://instagram.com" />
         </div>
+        
       </div>
 
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg">
-            <h2 className="text-lg  text-black font-semibold mb-4">Descargar Mapas</h2>
-            <p className="mb-4 text-black">Desde este lugar tenemos disponible por el momento el mapa de rutas de todo San Luis.</p>
-            <a
-              href="/mapaSL.pdf" // Ruta del PDF en la carpeta public
-              download="mapaSL.pdf"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-block text-center"
-            >
-              Descargar Mapa
-            </a>
+          <div className="bg-white p-6 rounded-lg max-w-sm w-full">
+            <h2 className="text-lg font-semibold text-black mb-4">Números de Emergencia</h2>
+            <ul className="text-black space-y-2">
+              <li><strong>Emergencias Generales:</strong> 911</li>
+              <li><strong>Bomberos:</strong> 100</li>
+              <li><strong>Policía:</strong> 101</li>
+              <li><strong>Emergencias Médicas:</strong> 107</li>
+              <li><strong>Hospital San Francisco:</strong> (2664) 443010</li>
+            </ul>
             <button
               onClick={() => setIsModalOpen(false)}
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4"
+              className="bg-yellow-600  hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4 w-full"
             >
               Cerrar
             </button>
           </div>
+          
         </div>
       )}
     </nav>

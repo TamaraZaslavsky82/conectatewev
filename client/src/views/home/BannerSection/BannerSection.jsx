@@ -1,5 +1,5 @@
 import React from "react";
-import bannerGif from '../../../assets/Logoconexion.png';
+import bannerGif from '../../../assets/bna.jpg';
 
 const BannerSection = () => {
   return (

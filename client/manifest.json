@@ -1,0 +1,21 @@
+{
+  "short_name": "ConectateSL",
+  "name": "CONECTATESL",
+  "icons": [
+    {
+      "src": "/iconologo.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/iconologo.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#ffffff",
+  "theme_color": "#007bff",
+  "display": "standalone",
+  "orientation": "portrait"
+}

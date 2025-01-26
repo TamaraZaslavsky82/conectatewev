@@ -21,6 +21,10 @@ const initialState = {
     puntosWifiDetail: [],
     socialMedia: [],
     socialMediaDetail: [],
+    pharmacyOnDuty:[],
+    pharmacyOnDutyDetail:[],
+    mensaje:[],
+    subscriptions: []
 
 }
 
@@ -356,8 +360,46 @@ const rootReducer = (state = initialState, action) => {
                 ...state,
                 socialMedia: state.socialMedia.filter((item) => item.id !== action.payload),
             };
+            case "GET_PHARMACY_ON_DUTY":
+                return {
+                    ...state,
+                    pharmacyOnDuty: action.payload,
+                };
+    
+            case "GET_ID_PHARMACY_ON_DUTY":
+                return {
+                    ...state,
+                    pharmacyOnDutyDetail: action.payload,
+                };
+    
+            case "POST_PHARMACY_ON_DUTY":
+                return {
+                    ...state,
+                };
+    
+            case "UPDATE_PHARMACY_ON_DUTY":
+                return {
+                    ...state,
+                    pharmacyOnDuty: state.pharmacyOnDuty.map((item) => {
+                        return item.id === action.payload.id ? action.payload : item;
+                    }),
+                };
+    
+            case "DELETE_PHARMACY_ON_DUTY":
+                return {
+                    ...state,
+                    pharmacyOnDuty: state.pharmacyOnDuty.filter((item) => item.id !== action.payload),
+                };
+                case "POST_MENSAJE":
+                    return {
+                        ...state,
+                    };
 
-
+                    case POST_USER_SUBSCRIPTION:
+                        return {
+                            ...state,
+                            subscriptions: [...state.subscriptions, action.payload],
+                        };
 
 
 

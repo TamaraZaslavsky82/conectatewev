@@ -6,6 +6,7 @@ import DestacadosSection from "./DestacadosSection/DestacadosSection";
 import InformationSection from "./InformationSection/InformationSection";
 import Footer from "../../components/Footer/Footer";
 import BannerSection from "./BannerSection/BannerSection";
+import PharmacyOnDutyList from "./PharmacyOnDutyList.jsx";
 
 const Home = () => {
   return (
@@ -16,6 +17,7 @@ const Home = () => {
       {/* Search Section */}
       <SearchSection />
 <BannerSection/>
+      <PharmacyOnDutyList/>
       {/* Municipalidad Section */}
       <MunicipalidadSection />
 
